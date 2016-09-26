@@ -1,0 +1,7 @@
+{
+  "includePaths": [
+    "./app",
+    "./app/styles",
+    "./node_modules"
+  ]
+}
