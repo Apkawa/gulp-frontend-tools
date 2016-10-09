@@ -7,7 +7,7 @@ var options = require('../options');
 
 
 
-gulp.task('default', ['public', 'css', 'templates', 'webpack'])
+gulp.task('default', ['public', 'css', 'webpack'])
 
 
 

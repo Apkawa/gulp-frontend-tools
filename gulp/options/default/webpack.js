@@ -25,14 +25,14 @@ var webpack_options = {
     output: {
         path: "{{ project.path.dist.js }}",
         filename: '[name].js',
-        sourceMapFilename: 'source_maps/[file].map'
+        sourceMapFilename: `_maps/[file].map`
     },
     eslint: {
         configFile: '{{ envs.root }}/.eslintrc'
     },
     module: {
         preLoaders: [
-            {test: /\.jsx?$/, loader: 'eslint-loader', exclude: /node_modules/}
+            {test: /\.jsx?$/, loaders: ['eslint-loader', 'source-map-loader'], exclude: /node_modules/}
         ],
         loaders: [
             {
@@ -77,7 +77,7 @@ var webpack_options = {
             "{{ project.path.app.js }}",
             "{{ project.app_root }}",
             "{{ project.project_root }}/",
-            path.join(envs.root, 'node_modules'),
+            envs.node_modules,
             envs.root,
         ],
         extensions: ['', '.js', '.jsx', '.json'],
@@ -92,11 +92,14 @@ var webpack_options = {
         new webpack.ProvidePlugin({
             jQuery: 'jquery',
             $: 'jquery',
-            "window.jQuery": "jquery",
             _: 'lodash',
-            u_: 'underscore'
         }),
-        new StringReplacePlugin()
+        new StringReplacePlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'commons',
+            filename: 'commons.js',
+            minChunks: 3,
+        }),
     ],
     node: {
         fs: "empty",
@@ -112,13 +115,11 @@ var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
     debug: false,
     watch: false,
     devtool: null,
-    plugins: webpack_options.plugins.concat([
+    plugins: [
+        ...webpack_options.plugins,
+
         //https://habrahabr.ru/post/308926/
         new LodashModuleReplacementPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            children: true,
-            async: true,
-        }),
         new webpack.NoErrorsPlugin(),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
@@ -126,14 +127,21 @@ var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
             minimize: true,
             beautify: false,
             comments: false,
-            sourceMap: false,
+            sourceMap: true,
             compress: {
                 warnings: false,
                 drop_console: true,
                 unsafe: true
             }
         }),
-    ]),
+        new CompressionPlugin({
+            asset: "[path].gz[query]",
+            algorithm: "gzip",
+            test: /\.js$|\.html$/,
+            threshold: 10240,
+            minRatio: 0.8
+        })
+    ],
 });
 
 if (envs.is_production) {

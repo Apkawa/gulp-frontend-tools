@@ -13,7 +13,7 @@ function objectTemplate(obj, context) {
             throwOnUndefined: true
         }
     );
-    context = _.cloneDeep(context);
+    context = {...context};
     traverse(obj).forEach(function (value) {
         if (_.isString(value)) {
             try {

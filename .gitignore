@@ -3,6 +3,5 @@ node_modules/
 bower_components/
 u24-templates/node_modules/
 *.hot-update.js*
-*.map
 *.log
 */dist/templates/

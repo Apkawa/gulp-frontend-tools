@@ -2,44 +2,35 @@
 
 var envs = require('../../libs/envs');
 
-var path = require('path');
-
-var project_root = path.join(envs.root, envs.project);
-
-var static_root = '/static/';
-
-var app_root = project_root + '/app';
-var dist_root = project_root + '/dist';
-
-var template = {
-    root: app_root + '/templates/',
-    context: app_root + '/templates_context/',
-};
 
 var options = {
-    project_root: project_root,
-    static_root: static_root,
-    node_modules: envs.node_modules,
-    app_root: app_root,
-    dist_root: dist_root,
-    public_root: '{{ _.app_root }}/public/',
+    project_root: '{{ envs.root }}/{{ envs.project }}',
+    static_root: '/static/',
+    app_root: '{{ _.project_root }}/app',
+    dist_root: '{{ _.project_root }}/dist',
     path: {
         app: {
             css: '{{ _.app_root }}/styles/',
+            scss: '{{ _.path.app.css }}',
+            images: '{{ _.app_root }}/images/',
             js: '{{ _.app_root }}/scripts/',
-            template: '{{ _.template.root }}/**/*',
-            template_context: '{{ _.template.context }}/**/*',
-            public_root: '{{ _.public_root }}',
+            template: '{{ _.template.root }}/',
+            template_context: '{{ _.template.context }}/',
             public: [
-                '{{ _.public_root }}/**/*',
+                '{{ _.app_root }}/public/',
             ]
         },
         dist: {
             js: '{{ _.dist_root }}/js',
             css: '{{ _.dist_root }}/css',
+            img: '{{ _.dist_root }}/img',
+            source_maps: '{{ _.dist_root }}/_maps/'
         }
     },
-    template: template,
+    template: {
+        root: '{{ _.app_root }}/templates/',
+        context: '{{ _.app_root }}/templates_context/',
+    },
     webpack: {
         entry_points: {}
     },
@@ -51,6 +42,33 @@ var options = {
             public_path: '{{ _.static_root }}js'
         }
     },
+    sprite: {
+        // a entry point
+        sprites: {
+            root: '{{ _.path.app.images }}/', // with append key name
+            imgRoot: '{{ _.static_root }}/img/',
+            spriteRoot: '{{ _.path.app.public[0] }}/img/',
+            suffix: 'icons-'
+        }
+    },
+    sass: {
+        includePaths: [
+            '{{ _.path.app.scss }}',
+            '{{ envs.node_modules }}'
+        ],
+    },
+    'sass-image': {
+        images: {
+            root: '{{ _.path.app.public[0] }}/img/',
+            http_images_path: '{{ _.static_root }}/img/',
+            base64: false,
+            suffix: 'img-'
+        }
+    },
+    context: {
+        'PROJECT_NAME': '{{ envs.project }}',
+        'STATIC_ROOT': '{{ project.static_root }}',
+    }
 };
 
 

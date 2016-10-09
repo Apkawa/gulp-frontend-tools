@@ -5,7 +5,7 @@ var options = require('../options');
 var browserSyncOptions = options.browserSync;
 var browserSync = browserSyncOptions.browserSync;
 
-gulp.task('serve', ['watch'], function () {
+gulp.task('serve', ['watch', 'templates'], function () {
     browserSync.init(browserSyncOptions.get_options());
 });
 

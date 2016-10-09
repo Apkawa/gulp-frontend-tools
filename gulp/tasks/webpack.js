@@ -15,9 +15,6 @@ import collect_filenames from '../libs/collect_filenames';
 function getWebpackEntry() {
     var ENTRY_ROOT = project.path.app.webpack_entry_root || path.join(project.path.app.js, 'entry');
     var entryPoints = collect_filenames(ENTRY_ROOT, '**/*.js?(x)');
-
-
-    console.log(ENTRY_ROOT, entryPoints)
     return _.merge({},
         entryPoints,
         webpack_options.entry);
