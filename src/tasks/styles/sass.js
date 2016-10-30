@@ -29,7 +29,7 @@ export default function (gulp, config) {
             .pipe(postcss(processors))
     }
 
-    gulp.task('css:sass', function () {
+    gulp.task('sass', function () {
 
         let stream = gulp.src(APP_PATH.scss + '/**/[^_]*.scss')
             .pipe(preprocess({context: config.project.context}))
@@ -45,16 +45,17 @@ export default function (gulp, config) {
     /*
      * Check CSS
      */
-    gulp.task('css:sass:check', function () {
+    gulp.task('sass:lint', function () {
         // gem install scss-lint
         return gulp.src(APP_PATH.scss || [APP_PATH.css + '**/[^_]*.scss', '!' + APP_PATH.css + 'base/_reset.scss'])
             .pipe(scsslint(
                 {
-                    'config': '.scss-lint.yml'
+                    'config': '.scss-lint.yml',
+                    'maxBuffer': 2048 * 1024
                 }
             ))
     });
 
-    gulp.task('css', ['css:sass:check', 'css:sass']);
+    gulp.task('css', ['sass:lint', 'sass']);
 
 }

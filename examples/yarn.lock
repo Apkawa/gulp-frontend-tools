@@ -3726,6 +3726,7 @@ gulp-filter@^4.0.0:
     humanize "0.0.9"
     imports-loader "^0.6.5"
     jquery-chained "^1.0.0"
+    js-object-pretty-print "^0.2.0"
     js-yaml "^3.5.2"
     json-loader "^0.5.4"
     json-schema-deref-sync "^0.3.2"

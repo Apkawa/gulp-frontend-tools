@@ -15,7 +15,6 @@ export default function (gulp, config) {
         return _.merge({},
             entryPoints,
             webpack_options.entry);
-
     }
 
     webpack_options.entry = getWebpackEntry();

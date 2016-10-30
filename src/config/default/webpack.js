@@ -76,11 +76,11 @@ var webpack_options = {
         modulesDirectories: [
             "{{ project.path.app.js }}",
             "{{ project.app_root }}",
-            "{{ project.project_root }}/",
+            "{{ project.project_root }}",
             "{{ project.path.node_modules }}",
             "{{ envs.root }}",
         ],
-        extensions: ['', '.js', '.jsx', '.json'],
+        extensions: ['', '.js', '.jsx'],
         alias: {}
     }
     ,
