@@ -6,7 +6,7 @@ export default function (gulp, config) {
     var browserSync = browserSyncOptions.browserSync;
 
     gulp.task('serve', ['watch', 'templates'], function () {
-        browserSync.init(browserSyncOptions.get_options());
+        browserSync.init(browserSyncOptions.get_options(config));
     });
 
 }

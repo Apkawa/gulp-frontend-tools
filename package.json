@@ -12,6 +12,7 @@
   "dependencies": {
     "autoprefixer": "^6.4.1",
     "autoprefixer-core": "*",
+    "babel": "^6.5.2",
     "babel-core": "^6.14.0",
     "babel-eslint": "^7.1.0",
     "babel-loader": "^6.2.4",
@@ -39,6 +40,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "glob": "^7.1.0",
+    "global": "^4.3.1",
     "gulp": "*",
     "gulp-clean": "^0.3.2",
     "gulp-clean-css": "^2.0.12",

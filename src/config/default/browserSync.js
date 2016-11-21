@@ -10,6 +10,8 @@ var browserSync = require('browser-sync').create();
 var webpack = require('webpack');
 var webpackDevMiddleware = require('webpack-dev-middleware');
 
+import webpackEntry from "../../libs/webpack_entry";
+
 
 function buildProxyList(proxyObject) {
     return _.map(proxyObject, function (v, k) {
@@ -22,7 +24,7 @@ function buildProxyList(proxyObject) {
 }
 
 function getWebpackMiddleware(publicPath, webpackConfig) {
-    var bundler = webpack(webpackConfig);
+    const bundler = webpack(webpackConfig);
     bundler.plugin('done', function (stats) {
         if (stats.hasErrors() || stats.hasWarnings()) {
             return browserSync.sockets.emit('fullscreen:message', {
@@ -33,7 +35,6 @@ function getWebpackMiddleware(publicPath, webpackConfig) {
         }
         browserSync.reload();
     });
-    console.log(publicPath)
 
     return webpackDevMiddleware(bundler, {
         publicPath: publicPath,
@@ -43,31 +44,31 @@ function getWebpackMiddleware(publicPath, webpackConfig) {
 }
 
 
-function getBSOptions() {
-    var webpackConfig = require('../../tasks/webpack');
+function getBSOptions(options) {
+    var webpack_options = options.webpack;
+    webpack_options.entry = webpackEntry(options);
 
-    var options = require('../').project;
-
+    var project = options.project;
 
     var bs_options = {
         open: true,
         startPath: "",
         browser: 'google-chrome',
         server: {
-            baseDir: options.dist_root,
+            baseDir: project.dist_root,
             routes: {},
             middleware: [
-                ...buildProxyList(_.get(options, 'browserSync.proxy', {})),
-                getWebpackMiddleware(_.get(options, 'browserSync.webpack.public_path'), webpackConfig)
+                ...buildProxyList(_.get(project, 'browserSync.proxy', {})),
+                getWebpackMiddleware(_.get(project, 'browserSync.webpack.public_path'), webpack_options)
             ],
         },
         plugins: [
             'bs-fullscreen-message'
         ]
     };
-    bs_options.server.routes[options.static_root] = options.dist_root;
+    bs_options.server.routes[project.static_root] = project.dist_root;
 
-    bs_options = _.merge({}, bs_options, _.get(options, 'browserSync.options', {}));
+    bs_options = _.merge({}, bs_options, _.get(project, 'browserSync.options', {}));
     return bs_options
 }
 

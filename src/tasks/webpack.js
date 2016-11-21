@@ -3,21 +3,12 @@ var _ = require('lodash')
 var gutil = require('gulp-util');
 var path = require('path');
 var webpack = require("webpack");
-import collect_filenames from "../libs/collect_filenames";
+import webpackEntry from "../libs/webpack_entry";
+
 
 export default function (gulp, config) {
-    var project = config.project;
     var webpack_options = config.webpack;
-
-    function getWebpackEntry() {
-        var ENTRY_ROOT = project.path.app.webpack_entry_root || path.join(project.path.app.js, 'entry');
-        var entryPoints = collect_filenames(ENTRY_ROOT, '**/*.js?(x)');
-        return _.merge({},
-            entryPoints,
-            webpack_options.entry);
-    }
-
-    webpack_options.entry = getWebpackEntry();
+    webpack_options.entry = webpackEntry(config);
 
     gulp.task('webpack:watch', function (callback) {
         webpack_options.watch = true;

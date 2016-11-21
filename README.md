@@ -22,29 +22,13 @@ https://github.com/luqin/react-component-tools
         
 
 # Сборка проекта
-## Сборка для продакшена
-`./build.sh` - скрипт, который пересобирает фронтэнд для продакшена
 
-## Разработка
-Запуск дев сервера для проекта u24-desktop
 
-    gulp --project example serve
+
+# contribute
     
-Запуск дев сервера для проекта u24-mobile
+    npm install
 
-    gulp --project example serve
-
-
-# Основные требования к стилю кода.
-
-https://github.com/airbnb/javascript
-
-
-Вкратце
-
-* Не используем тернарные операторы
-* все if должны быть с фигурными скобками
-* если переменная является jQuery селектором, то она начинается с $, только в этом случае!
-
-
-
+    npm install babel-cli
+    
+    npm run build

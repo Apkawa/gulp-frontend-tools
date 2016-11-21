@@ -13,25 +13,26 @@ var debug = require('gulp-debug');
 var loadData = require('../../libs/load_data');
 
 export default function (gulp, config) {
-    var browserSync = require('../browserSync');
+    const browserSyncOptions = config.browserSync;
+    const browserSync = browserSyncOptions.browserSync;
 
-    var template_options = config.template;
+    const template_options = config.template;
 
-    var TEMPLATE_ROOT = config.project.template.root;
-    var CONTEXT_ROOT = config.project.template.context;
-    var APP_ROOT = config.project.app_root;
-    var DIST_ROOT = config.project.dist_root;
+    const TEMPLATE_ROOT = config.project.template.root;
+    const CONTEXT_ROOT = config.project.template.context;
+    const APP_ROOT = config.project.app_root;
+    const DIST_ROOT = config.project.dist_root;
 
-    var getJsonData = function (file) {
-        var parsed = path.parse(path.normalize(file.path));
-        var dirname = _.slice(parsed.dir, path.normalize(TEMPLATE_ROOT).length).join('');
+    const getJsonData = function (file) {
+        const parsed = path.parse(path.normalize(file.path));
+        let dirname = _.slice(parsed.dir, path.normalize(TEMPLATE_ROOT).length).join('');
         dirname = dirname.replace('_jinja', '')
-        var name = path.join(dirname, parsed.name);
+        const name = path.join(dirname, parsed.name);
 
         return loadData(name, CONTEXT_ROOT);
     };
 
-    var ignoreTemplate = function (file) {
+    const ignoreTemplate = function (file) {
         /* ignore partials like sass */
         var parts = _.filter(file.path.split('/'), function (part) {
             return part.startsWith("_")
@@ -39,7 +40,7 @@ export default function (gulp, config) {
         if (parts.length) {
             return true
         }
-    }
+    };
 
     function errorHandler(err) {
         if (err) {
