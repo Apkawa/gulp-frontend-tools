@@ -10,7 +10,11 @@ var plumber = require('gulp-plumber');
 var ignore = require('gulp-ignore');
 var debug = require('gulp-debug');
 
+
 var loadData = require('../../libs/load_data');
+
+import ignoreTemplate  from '../../libs/ignore_template'
+
 
 export default function (gulp, config) {
     const browserSyncOptions = config.browserSync;
@@ -32,15 +36,6 @@ export default function (gulp, config) {
         return loadData(name, CONTEXT_ROOT);
     };
 
-    const ignoreTemplate = function (file) {
-        /* ignore partials like sass */
-        var parts = _.filter(file.path.split('/'), function (part) {
-            return part.startsWith("_")
-        })
-        if (parts.length) {
-            return true
-        }
-    };
 
     function errorHandler(err) {
         if (err) {
@@ -54,7 +49,6 @@ export default function (gulp, config) {
     }
 
     gulp.task('templates:jinja2', function () {
-
         return gulp.src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: APP_ROOT})
             .pipe(ignore.exclude(ignoreTemplate))
             .pipe(debug({title: "template"}))

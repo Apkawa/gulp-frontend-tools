@@ -11,6 +11,8 @@ var gutil = require('gulp-util');
 
 
 function loadData(name, context_root) {
+    const parsed = path.parse(path.normalize(name));
+    name = path.join(parsed.dir, parsed.name)
 
     var context_path = context_root + name;
 
@@ -39,7 +41,7 @@ function loadData(name, context_root) {
     if (_.isEmpty(_context)) {
         gutil.log(gutil.colors.cyan(name), gutil.colors.yellow("Не найден контекст"))
     }
-    return _context || {};
+    return _context;
 }
 
 
