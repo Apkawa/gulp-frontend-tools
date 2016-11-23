@@ -17,6 +17,7 @@ export default function (gulp, config) {
     const DIST_PATH = config.project.path.dist;
 
     const sassOpts = config.project.sass;
+    const scss_lint_opts = config.project.scss_lint;
 
     function cssStream(stream) {
         var processors = [
@@ -48,12 +49,7 @@ export default function (gulp, config) {
     gulp.task('sass:lint', function () {
         // gem install scss-lint
         return gulp.src(APP_PATH.scss || [APP_PATH.css + '**/[^_]*.scss', '!' + APP_PATH.css + 'base/_reset.scss'])
-            .pipe(scsslint(
-                {
-                    'config': '.scss-lint.yml',
-                    'maxBuffer': 2048 * 1024
-                }
-            ))
+            .pipe(scsslint(scss_lint_opts))
     });
 
     gulp.task('css', ['sass:lint', 'sass']);
