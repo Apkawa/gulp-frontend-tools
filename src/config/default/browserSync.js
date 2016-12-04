@@ -1,4 +1,5 @@
 import _ from "lodash";
+import webpackEntry from "../../libs/webpack_entry";
 var url = require('url');
 var path = require('path');
 var proxy = require('proxy-middleware');
@@ -9,8 +10,6 @@ var browserSync = require('browser-sync').create();
 /* Webpack */
 var webpack = require('webpack');
 var webpackDevMiddleware = require('webpack-dev-middleware');
-
-import webpackEntry from "../../libs/webpack_entry";
 
 
 function buildProxyList(proxyObject) {
@@ -23,7 +22,8 @@ function buildProxyList(proxyObject) {
 
 }
 
-function getWebpackMiddleware(publicPath, webpackConfig) {
+function getWebpackMiddleware(webpackConfig) {
+    const publicPath = webpackConfig.output.publicPath;
     const bundler = webpack(webpackConfig);
     bundler.plugin('done', function (stats) {
         if (stats.hasErrors() || stats.hasWarnings()) {
@@ -37,7 +37,7 @@ function getWebpackMiddleware(publicPath, webpackConfig) {
     });
 
     return webpackDevMiddleware(bundler, {
-        publicPath: publicPath,
+        publicPath,
         stats: {colors: true},
     })
 
@@ -59,7 +59,7 @@ function getBSOptions(options) {
             routes: {},
             middleware: [
                 ...buildProxyList(_.get(project, 'browserSync.proxy', {})),
-                getWebpackMiddleware(_.get(project, 'browserSync.webpack.public_path'), webpack_options)
+                getWebpackMiddleware(webpack_options)
             ],
         },
         plugins: [

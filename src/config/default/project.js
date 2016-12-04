@@ -33,15 +33,13 @@ var options = {
         context: '{{ _.app_root }}/templates_context/',
     },
     webpack: {
-        entry_points: {}
+        entry_points: {},
+        publicPath: '{{ _.static_root }}js'
     },
     browserSync: {
         proxy: {
             '/example': 'http://example.com/'
         },
-        webpack: {
-            public_path: '{{ _.static_root }}js'
-        }
     },
     sprite: {
         // a entry point

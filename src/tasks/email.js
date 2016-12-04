@@ -1,7 +1,7 @@
 'use scrict';
 //TODO
 export default function (gulp, config) {
-    gulp.task('email', ['css', 'public', 'template'], function () {
+    gulp.task('email', ['css', 'public', 'templates'], function () {
         /* Хелпер для тестирования шаблонов email */
         var builder = emailBuilder(gulp_config.email_builder)
         gulp.src(dist_dirs.templates + 'email_template/*.html')

@@ -15,31 +15,38 @@ var envs = require('../../libs/envs');
 
 var webpack_options = {
     cache: true,
-    debug: true,
     watch: false,
     devtool: 'source-map',
     devServer: {
         hot: true,
     },
-    entry: {},
+    entry: {
+        _dev: [
+            'webpack/hot/dev-server',
+            'webpack-hot-middleware/client',
+        ]
+    },
     output: {
         path: "{{ project.path.dist.js }}",
         filename: '[name].js',
-        public_path: '{{ project.static_root }}/js/',
+        publicPath: '{{ project.webpack.publicPath }}',
         sourceMapFilename: `_maps/[file].map`
     },
-    eslint: {
-        configFile: '{{ project.eslint.configFile }}'
-    },
     module: {
-        preLoaders: [
-            {test: /\.jsx?$/, loaders: ['eslint-loader', 'source-map-loader'], exclude: /node_modules/}
-        ],
         loaders: [
+            {
+                enforce: 'pre',
+                test: /\.jsx?$/,
+                loaders: [
+                    'eslint-loader?configFile={{ project.eslint.configFile }}',
+                    'source-map-loader'
+                ],
+                exclude: /node_modules/
+            },
             {
                 test: /\.jsx?$/,
                 exclude: [/node_modules/, /vendors/],
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: {
                     presets: ['react', 'es2015'],
                     plugins: [
@@ -73,16 +80,15 @@ var webpack_options = {
         noParse: /\.min\.js/
     },
     resolve: {
-        root: [],
-        modulesDirectories: [
+        extensions: ['.js', '.jsx'],
+        alias: {},
+        modules: [
             "{{ project.path.app.js }}",
             "{{ project.app_root }}",
             "{{ project.project_root }}",
             "{{ project.path.node_modules }}",
             "{{ envs.root }}",
         ],
-        extensions: ['', '.js', '.jsx'],
-        alias: {}
     }
     ,
     plugins: [
@@ -94,12 +100,13 @@ var webpack_options = {
             $: 'jquery',
             _: 'lodash',
         }),
-        new StringReplacePlugin(),
+        //new StringReplacePlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'commons',
             filename: 'commons.js',
             minChunks: 3,
         }),
+        new webpack.HotModuleReplacementPlugin(),
     ],
     node: {
         fs: "empty",
@@ -112,7 +119,6 @@ var webpack_options = {
 
 var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
     cache: false,
-    debug: false,
     watch: false,
     devtool: null,
     plugins: [

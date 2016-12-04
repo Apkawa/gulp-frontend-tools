@@ -1,4 +1,4 @@
 
 $(() => {
-    console.log('Example build point5!');
+    console.log('Example build point!');
 });
