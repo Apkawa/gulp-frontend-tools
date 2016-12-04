@@ -21,11 +21,16 @@ var webpack_options = {
     devServer: {
         hot: true,
     },
-    entry: {},
+    entry: {
+        _dev: [
+            'webpack/hot/dev-server',
+            'webpack-hot-middleware/client',
+        ]
+    },
     output: {
         path: "{{ project.path.dist.js }}",
         filename: '[name].js',
-        public_path: '{{ project.static_root }}/js/',
+        publicPath: '{{ project.webpack.publicPath }}',
         sourceMapFilename: `_maps/[file].map`
     },
     eslint: {
@@ -100,6 +105,7 @@ var webpack_options = {
             filename: 'commons.js',
             minChunks: 3,
         }),
+        new webpack.HotModuleReplacementPlugin(),
     ],
     node: {
         fs: "empty",

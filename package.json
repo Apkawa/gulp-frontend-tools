@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel --out-dir lib src",
+    "watch": "babel --watch --out-dir lib src",
     "lint": "eslint src"
   },
   "author": "apkawa <apkawa@gmail.com>",
@@ -12,7 +13,6 @@
   "dependencies": {
     "autoprefixer": "^6.5.3",
     "autoprefixer-core": "*",
-    "babel": "^6.5.2",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",
@@ -88,6 +88,7 @@
     "nunjucks": "^3.0.0",
     "path": "*",
     "proxy-middleware": "^0.15.0",
+    "react-hot-loader": "^1.3.1",
     "react-transform-hmr": "^1.0.1",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.2.2",
@@ -107,6 +108,7 @@
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^1.14.0",
+    "webpack-hot-middleware": "^2.13.2",
     "webpack-stream": "^3.1.0"
   },
   "devDependencies": {

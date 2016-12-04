@@ -1,4 +1,5 @@
 import _ from "lodash";
+import webpackEntry from "../../libs/webpack_entry";
 var url = require('url');
 var path = require('path');
 var proxy = require('proxy-middleware');
@@ -9,8 +10,7 @@ var browserSync = require('browser-sync').create();
 /* Webpack */
 var webpack = require('webpack');
 var webpackDevMiddleware = require('webpack-dev-middleware');
-
-import webpackEntry from "../../libs/webpack_entry";
+var webpackHotMiddleware = require('webpack-hot-middleware');
 
 
 function buildProxyList(proxyObject) {
@@ -23,7 +23,8 @@ function buildProxyList(proxyObject) {
 
 }
 
-function getWebpackMiddleware(publicPath, webpackConfig) {
+function getWebpackMiddleware(webpackConfig) {
+    const publicPath = webpackConfig.output.publicPath;
     const bundler = webpack(webpackConfig);
     bundler.plugin('done', function (stats) {
         if (stats.hasErrors() || stats.hasWarnings()) {
@@ -33,13 +34,15 @@ function getWebpackMiddleware(publicPath, webpackConfig) {
                 timeout: 100000
             });
         }
-        browserSync.reload();
+        //browserSync.reload();
     });
 
-    return webpackDevMiddleware(bundler, {
-        publicPath: publicPath,
+    return [webpackDevMiddleware(bundler, {
+        publicPath,
         stats: {colors: true},
-    })
+    }),
+        webpackHotMiddleware(bundler),
+    ]
 
 }
 
@@ -59,11 +62,10 @@ function getBSOptions(options) {
             routes: {},
             middleware: [
                 ...buildProxyList(_.get(project, 'browserSync.proxy', {})),
-                getWebpackMiddleware(_.get(project, 'browserSync.webpack.public_path'), webpack_options)
+                ...getWebpackMiddleware(webpack_options)
             ],
         },
         plugins: [
-            'bs-fullscreen-message'
         ]
     };
     bs_options.server.routes[project.static_root] = project.dist_root;
