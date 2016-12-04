@@ -11,12 +11,12 @@ before_script:
   - gulp -v
 script:
   #- npm run lint
-  - npm run build
+  - yarn run build
 
   - rm -rf node_modules
 
   - cd examples
-  - npm install
+  - yarn
   #- npm test
   - gulp build
   - gulp build --type=production
