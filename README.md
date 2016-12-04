@@ -2,7 +2,7 @@ https://github.com/luqin/react-component-tools
 # Структура проектов
 
 * { project_name }
-    * app - исходники
+    * app - исходникrun-sequenceи
         * images
             * sprites - спрайты
         * public - файлы которые нужно копировать в dist. 
@@ -31,4 +31,4 @@ https://github.com/luqin/react-component-tools
 
     npm install babel-cli
     
-    npm run build
+    npm run watch

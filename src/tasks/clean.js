@@ -5,7 +5,7 @@ export default function (gulp, config) {
     const {project: {dist_root: DIST_ROOT}} = config;
 
     gulp.task('clean', function () {
-        gulp.src(DIST_ROOT, {read: false})
+        return gulp.src(DIST_ROOT, {read: false})
             .pipe(clean({force: true}))
 
     })
