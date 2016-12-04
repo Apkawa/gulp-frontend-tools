@@ -19,12 +19,13 @@ var webpack_options = {
     watch: false,
     devtool: 'source-map',
     devServer: {
-        hot: false,
+        hot: true,
     },
     entry: {},
     output: {
         path: "{{ project.path.dist.js }}",
         filename: '[name].js',
+        public_path: '{{ project.static_root }}/js/',
         sourceMapFilename: `_maps/[file].map`
     },
     eslint: {

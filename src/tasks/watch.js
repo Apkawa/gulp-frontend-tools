@@ -1,6 +1,7 @@
 'use strict';
 export default function (gulp, config) {
-    var browserSync = require('./browserSync');
+    var browserSyncOptions = config.browserSync;
+    var browserSync = browserSyncOptions.browserSync;
 
     const {project: {path: {app: APP_PATH}}} = config;
     /*
