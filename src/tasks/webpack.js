@@ -3,14 +3,12 @@ var _ = require('lodash')
 var gutil = require('gulp-util');
 var path = require('path');
 var webpack = require("webpack");
-import webpackEntry from "../libs/webpack_entry";
 
 
 export default function (gulp, config) {
-    var webpack_options = config.webpack;
-    webpack_options.entry = webpackEntry(config);
 
-    console.log(webpack_options.entry)
+    const webpack_options = config.webpack.getOptions(config);
+
     gulp.task('webpack:watch', function (callback) {
         webpack_options.watch = true;
         webpack(webpack_options,

@@ -34,7 +34,12 @@ var options = {
     },
     webpack: {
         entry_points: {},
-        publicPath: '{{ _.static_root }}js'
+        publicPath: '{{ _.static_root }}js',
+        modules: [],
+        defines: {
+            'STATIC_ROOT': '"{{ project.static_root }}"',
+        },
+        eslint: false,
     },
     browserSync: {
         proxy: {

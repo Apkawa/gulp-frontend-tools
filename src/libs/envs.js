@@ -11,6 +11,8 @@ function getEnvs() {
         'lib_root': path.dirname(path.dirname(__dirname)),
     };
     envs.is_production = envs.type == 'production';
+    envs.debug = !envs.is_production;
+
     return envs
 }
 

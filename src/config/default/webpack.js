@@ -12,6 +12,15 @@ var CompressionPlugin = require("compression-webpack-plugin");
 
 var envs = require('../../libs/envs');
 
+import webpackEntry from "../../libs/webpack_entry";
+
+const eslint_options = {
+    configFile: '{{ project.eslint.configFile }}',
+
+    preLoaders: [
+        {test: /\.jsx?$/, loaders: ['eslint-loader', 'source-map-loader'], exclude: /node_modules/}
+    ],
+}
 
 var webpack_options = {
     cache: true,
@@ -33,13 +42,7 @@ var webpack_options = {
         publicPath: '{{ project.webpack.publicPath }}',
         sourceMapFilename: `_maps/[file].map`
     },
-    eslint: {
-        configFile: '{{ project.eslint.configFile }}'
-    },
     module: {
-        preLoaders: [
-            {test: /\.jsx?$/, loaders: ['eslint-loader', 'source-map-loader'], exclude: /node_modules/}
-        ],
         loaders: [
             {
                 test: /\.jsx?$/,
@@ -64,7 +67,7 @@ var webpack_options = {
             },
             {
                 test: /\.scss$/,
-                loaders: ["style", "css", "sass"]
+                loaders: ["style", "css", "sass", "import-glob"]
             },
 
             {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=100000&mimetype=application/font-woff'},
@@ -82,18 +85,14 @@ var webpack_options = {
         modulesDirectories: [
             "{{ project.path.app.js }}",
             "{{ project.app_root }}",
-            "{{ project.project_root }}",
+            '{{ project.project_root }}',
             "{{ project.path.node_modules }}",
-            "{{ envs.root }}",
         ],
         extensions: ['', '.js', '.jsx'],
         alias: {}
     }
     ,
     plugins: [
-        new webpack.DefinePlugin({
-            'STATIC_ROOT': '"{{ project.static_root }}"',
-        }),
         new webpack.ProvidePlugin({
             jQuery: 'jquery',
             $: 'jquery',
@@ -111,7 +110,8 @@ var webpack_options = {
         fs: "empty",
         file: 'empty',
         directory: 'empty',
-        debug: 'empty'
+        debug: 'empty',
+        net: 'empty'
     }
 };
 
@@ -154,4 +154,31 @@ if (envs.is_production) {
     webpack_options = webpack_options_production
 }
 
-module.exports = webpack_options;
+
+function getOptions(config) {
+    const {webpack:{options:webpack_options}} = config;
+    const project_webpack = _.get(config, 'project.webpack', {})
+    const extra_modules = _.get(config, 'project.webpack.modules', []);
+    const defines = _.get(config, 'project.webpack.defines', {});
+
+    webpack_options.entry = webpackEntry(config);
+/*    webpack_options.resolve.modulesDirectories = [
+        ...webpack_options.resolve.modulesDirectories,
+        ...extra_modules,
+    ]*/
+
+    webpack_options.plugins.unshift(
+        new webpack.DefinePlugin(defines),
+    )
+    if (project_webpack.eslint) {
+        webpack_options.eslint = {configFile: eslint_options.configFile}
+        webpack_options.module.preLoaders = eslint_options.preLoaders;
+    }
+    return webpack_options
+}
+
+
+module.exports = {
+    getOptions,
+    options: webpack_options,
+};

@@ -5,13 +5,13 @@ var envs = require('../libs/envs');
 var requireDir = require('require-dir');
 
 import optionsRenderer from "../libs/options_renderer";
-
+import deepmerge from 'deepmerge'
 
 export default function (override_options) {
     var options = requireDir('./default');
 
     try {
-        options = _.merge({}, options, override_options);
+        options = deepmerge(options, override_options);
     } catch (err) {
         // noop
     }

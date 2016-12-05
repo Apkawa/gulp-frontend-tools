@@ -23,7 +23,7 @@ function buildProxyList(proxyObject) {
 
 }
 
-function getWebpackMiddleware(webpackConfig) {
+function getWebpackMiddlewares(webpackConfig) {
     const publicPath = webpackConfig.output.publicPath;
     const bundler = webpack(webpackConfig);
     bundler.plugin('done', function (stats) {
@@ -48,8 +48,7 @@ function getWebpackMiddleware(webpackConfig) {
 
 
 function getBSOptions(options) {
-    var webpack_options = options.webpack;
-    webpack_options.entry = webpackEntry(options);
+    const webpack_options = options.webpack.getOptions(options);
 
     var project = options.project;
 
@@ -62,11 +61,10 @@ function getBSOptions(options) {
             routes: {},
             middleware: [
                 ...buildProxyList(_.get(project, 'browserSync.proxy', {})),
-                ...getWebpackMiddleware(webpack_options)
+                ...getWebpackMiddlewares(webpack_options)
             ],
         },
-        plugins: [
-        ]
+        plugins: []
     };
     bs_options.server.routes[project.static_root] = project.dist_root;
 

@@ -52,6 +52,6 @@ export default function (gulp, config) {
             .pipe(scsslint(scss_lint_opts))
     });
 
-    gulp.task('css', ['sass:lint', 'sass']);
+    gulp.task('css', ['sass']);
 
 }
