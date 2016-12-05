@@ -13,7 +13,7 @@ var debug = require('gulp-debug');
 
 var loadData = require('../../libs/load_data');
 
-import ignoreTemplate  from '../../libs/ignore_template'
+import ignoreTemplate from "../../libs/ignore_template";
 
 
 export default function (gulp, config) {
@@ -24,8 +24,7 @@ export default function (gulp, config) {
 
     const TEMPLATE_ROOT = config.project.template.root;
     const CONTEXT_ROOT = config.project.template.context;
-    const APP_ROOT = config.project.app_root;
-    const DIST_ROOT = config.project.dist_root;
+    const TEMPLATE_DIST_ROOT = _.get(config, 'project.dist.template')
 
     const getJsonData = function (file) {
         const parsed = path.parse(path.normalize(file.path));
@@ -49,14 +48,14 @@ export default function (gulp, config) {
     }
 
     gulp.task('templates:jinja2', function () {
-        return gulp.src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: APP_ROOT})
+        return gulp.src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: TEMPLATE_ROOT})
             .pipe(ignore.exclude(ignoreTemplate))
             .pipe(debug({title: "template"}))
             .pipe(data(getJsonData))
             .pipe(plumber(errorHandler))
             .pipe(nunjucksRender(template_options))
             .pipe(plumber.stop())
-            .pipe(gulp.dest(DIST_ROOT))
+            .pipe(gulp.dest(TEMPLATE_DIST_ROOT))
             .pipe(browserSync.stream())
     });
 }

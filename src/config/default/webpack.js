@@ -30,12 +30,7 @@ var webpack_options = {
     devServer: {
         hot: true,
     },
-    entry: {
-        _dev: [
-            'webpack/hot/dev-server',
-            'webpack-hot-middleware/client',
-        ]
-    },
+    entry: {},
     output: {
         path: "{{ project.path.dist.js }}",
         filename: '[name].js',
@@ -97,6 +92,8 @@ var webpack_options = {
             jQuery: 'jquery',
             $: 'jquery',
             _: 'lodash',
+            Promise: 'es6-promise',
+            // fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
         }),
         new StringReplacePlugin(),
         new webpack.optimize.CommonsChunkPlugin({
@@ -123,7 +120,6 @@ var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
     devtool: null,
     plugins: [
         ...webpack_options.plugins,
-
         //https://habrahabr.ru/post/308926/
         new LodashModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
@@ -158,14 +154,24 @@ if (envs.is_production) {
 function getOptions(config) {
     const {webpack:{options:webpack_options}} = config;
     const project_webpack = _.get(config, 'project.webpack', {})
-    const extra_modules = _.get(config, 'project.webpack.modules', []);
     const defines = _.get(config, 'project.webpack.defines', {});
 
     webpack_options.entry = webpackEntry(config);
-/*    webpack_options.resolve.modulesDirectories = [
-        ...webpack_options.resolve.modulesDirectories,
-        ...extra_modules,
-    ]*/
+    if (project_webpack.hot && envs.debug) {
+        webpack_options.entry = _.fromPairs(_.map(webpack_options.entry,
+            (f, n) => [n, [
+                f,
+                'webpack/hot/dev-server',
+                'webpack-hot-middleware/client',
+            ]]
+            )
+        );
+    }
+
+    /*    webpack_options.resolve.modulesDirectories = [
+     ...webpack_options.resolve.modulesDirectories,
+     ...extra_modules,
+     ]*/
 
     webpack_options.plugins.unshift(
         new webpack.DefinePlugin(defines),

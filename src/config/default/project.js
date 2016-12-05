@@ -25,12 +25,14 @@ var options = {
             js: '{{ _.dist_root }}/js',
             css: '{{ _.dist_root }}/css',
             img: '{{ _.dist_root }}/img',
+            template: '{{ _.template.dist }}/',
             source_maps: '{{ _.dist_root }}/_maps/'
         }
     },
     template: {
         root: '{{ _.app_root }}/templates/',
         context: '{{ _.app_root }}/templates_context/',
+        dist: '{{ _.dist_root }}/templates/',
     },
     webpack: {
         entry_points: {},

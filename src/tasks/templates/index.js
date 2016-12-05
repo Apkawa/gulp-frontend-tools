@@ -14,8 +14,9 @@ export default function (gulp, config) {
     const DIST_ROOT = config.project.dist_root;
     const TEMPLATE_NAME = path.join(__dirname, '../../../templates', 'index.j2')
 
+    // TODO maybe browsersync plugin?
     gulp.task('templates:index', function () {
-        var filenames = _.keys(collect_filenames(DIST_ROOT, '/**/*.html'))
+        const filenames = _.keys(collect_filenames(DIST_ROOT, '/**/*.html'))
         return gulp.src(TEMPLATE_NAME)
             .pipe(data(function () {
                 return {filenames: filenames}
@@ -27,6 +28,6 @@ export default function (gulp, config) {
 
     });
 
-    gulp.task('templates', ['templates:jinja2', 'templates:index']);
+    gulp.task('templates', ['templates:jinja2']);
 }
 

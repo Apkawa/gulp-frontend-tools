@@ -8,15 +8,6 @@ export default function getWebpackEntry(config) {
     const webpack_options = config.webpack;
 
     const ENTRY_ROOT = project.path.app.webpack_entry_root || path.join(project.path.app.js, 'entry');
-    const entryPoints = _.fromPairs(_.map(collect_filenames(ENTRY_ROOT, '**/*.js?(x)'),
-        (f, n) => [n, [
-            f,
-            'webpack/hot/dev-server',
-            'webpack-hot-middleware/client',
-        ]]
-        )
-    );
-
-    console.log(entryPoints)
+    const entryPoints = collect_filenames(ENTRY_ROOT, '**/*.js?(x)')
     return _.merge({}, entryPoints, webpack_options.entry);
 }
