@@ -9,15 +9,10 @@ export default function (gulp, config) {
     var browserSync = browserSyncOptions.browserSync;
 
     function watch(glob, tasks, reload = false) {
-        return _watch(glob, batch((events, done) => {
-                gulp.start(tasks, () => {
-                    if (reload) {
-                        browserSync.reload()
-                    }
-                    done()
-                })
-            })
-        )
+        if (reload) {
+            tasks.push(browserSync.reload)
+        }
+        return gulp.watch(glob, tasks)
     }
 
     const {project: {path: {app: APP_PATH}}} = config;
