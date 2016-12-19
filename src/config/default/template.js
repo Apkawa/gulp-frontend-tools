@@ -1,23 +1,20 @@
 'use strict';
+import _ from "lodash";
+import humanize from "humanize";
+import moment from "moment";
+import {format as dateformat} from "dateformatter";
+import _loadData from "../../libs/load_data";
 
-var _ = require('lodash');
-var humanize = require('humanize');
-
-var moment = require('moment');
-var dateformat = require('dateformatter').format;
-
-
-var _loadData = require('../../libs/load_data');
 
 function loadData(name) {
-    var options = require('../').project;
+    const options = require('../').project;
     return _loadData(name, options.template.context)
 }
 
-var EMPTY_FUNC = function () {
-}
+const EMPTY_FUNC = function () {
+};
 
-var filters = {
+const filters = {
     jsonify: function (input) {
         return JSON.stringify(input);
     },
@@ -35,11 +32,10 @@ var filters = {
         return dateformat(format, dt);
     }
 
-}
+};
 
 
-
-var globals = {
+const globals = {
     static: function (url) {
         var static_root = '/static/';
         return static_root + url
@@ -47,9 +43,9 @@ var globals = {
     url: function (url) {
         return url
     },
-}
+};
 
-var manageEnvironment = function (env) {
+const manageEnvironment = function (env) {
     _.each(filters, function (func, name) {
         env.addFilter(name, func);
     });
@@ -57,9 +53,9 @@ var manageEnvironment = function (env) {
         env.addGlobal(name, value)
 
     })
-}
+};
 
-var opts = {
+const opts = {
     path: "{{ project.template.root }}",
     manageEnv: manageEnvironment
 

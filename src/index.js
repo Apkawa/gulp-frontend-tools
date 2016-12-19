@@ -1,5 +1,5 @@
-import requireDir from "require-dir";
 import _ from "lodash";
+import requireDir from "require-dir";
 import buildConfig from "./config";
 
 function evalTasks(wrap_func, gulp, compiled_config) {

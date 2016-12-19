@@ -1,8 +1,8 @@
 'use strict';
 import _ from "lodash";
 import sassImage from "gulp-sass-image";
+import merge from "merge-stream";
 
-var merge = require('merge-stream');
 
 export default function (gulp, config) {
 

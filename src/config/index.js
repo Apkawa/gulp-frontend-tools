@@ -1,14 +1,12 @@
 'use strict';
-
-var _ = require('lodash');
-var envs = require('../libs/envs');
-var requireDir = require('require-dir');
-
+import _ from "lodash";
+import requireDir from "require-dir";
+import deepmerge from "deepmerge";
+import envs from "../libs/envs";
 import optionsRenderer from "../libs/options_renderer";
-import deepmerge from 'deepmerge'
 
 export default function (override_options) {
-    var options = requireDir('./default');
+    let options = requireDir('./default');
 
     try {
         options = deepmerge(options, override_options);

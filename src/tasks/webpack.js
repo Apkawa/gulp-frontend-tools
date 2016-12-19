@@ -1,9 +1,6 @@
 'use strict';
-var _ = require('lodash')
-var gutil = require('gulp-util');
-var path = require('path');
-var webpack = require("webpack");
-
+import webpack from "webpack";
+import gutil from "gulp-util";
 
 export default function (gulp, config) {
 

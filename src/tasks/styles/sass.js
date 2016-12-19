@@ -1,26 +1,24 @@
 'use strict';
 import path from "path";
-var gulp = require('gulp');
-var scsslint = require('gulp-scss-lint');
-var sass = require('gulp-sass');
-var sassGlob = require('gulp-sass-glob');
-var autoprefixer = require('autoprefixer');
-var cssnano = require('cssnano');
+import scsslint from "gulp-scss-lint";
+import sass from "gulp-sass";
+import sassGlob from "gulp-sass-glob";
+import autoprefixer from "autoprefixer";
+import cssnano from "cssnano";
+import postcss from "gulp-postcss";
+import preprocess from "gulp-preprocess";
+import sourcemaps from "gulp-sourcemaps";
 
-var postcss = require('gulp-postcss');
-var gulpif = require('gulp-if');
-var preprocess = require('gulp-preprocess');
-var sourcemaps = require('gulp-sourcemaps');
 
 export default function (gulp, config) {
     const APP_PATH = config.project.path.app;
     const DIST_PATH = config.project.path.dist;
-
+    const SOURCE_MAP_DIST = path.join('..', path.basename(DIST_PATH.source_maps));
     const sassOpts = config.project.sass;
     const scss_lint_opts = config.project.scss_lint;
 
-    function cssStream(stream) {
-        var processors = [
+    function cssStream(stream, config) {
+        let processors = [
             autoprefixer({browsers: ['last 1 version']}),
         ];
         if (config.envs.is_production) {
@@ -31,15 +29,14 @@ export default function (gulp, config) {
     }
 
     gulp.task('sass', function () {
-
-        let stream = gulp.src(APP_PATH.scss + '/**/[^_]*.scss')
+        let stream = gulp.src(APP_PATH.scss + '/**/*.scss')
             .pipe(preprocess({context: config.project.context}))
             .pipe(sourcemaps.init())
             .pipe(sassGlob(sassOpts))
-            .pipe(sass(sassOpts).on('error', sass.logError))
+            .pipe(sass(sassOpts).on('error', sass.logError));
 
-        return cssStream(stream)
-            .pipe(sourcemaps.write(path.join('..', path.basename(DIST_PATH.source_maps))))
+        return cssStream(stream, config)
+            .pipe(sourcemaps.write(SOURCE_MAP_DIST))
             .pipe(gulp.dest(DIST_PATH.css))
     });
 

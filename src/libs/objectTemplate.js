@@ -1,12 +1,9 @@
 'use strict';
-import {pretty} from "js-object-pretty-print";
+import _ from "lodash";
+import gutil from "gulp-util";
+import traverse from "traverse";
+import nunjucks from "nunjucks";
 
-var _ = require('lodash');
-
-var gutil = require('gulp-util');
-
-var traverse = require('traverse');
-var nunjucks = require('nunjucks');
 
 function objectTemplate(obj, context) {
     var tpl = new nunjucks.Environment(new nunjucks.FileSystemLoader('views'),

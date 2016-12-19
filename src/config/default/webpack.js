@@ -35,7 +35,7 @@ var webpack_options = {
         path: "{{ project.path.dist.js }}",
         filename: '[name].js',
         publicPath: '{{ project.webpack.publicPath }}',
-        sourceMapFilename: `_maps/[file].map`
+        sourceMapFilename: `../_maps/[file].map`
     },
     module: {
         loaders: [
@@ -136,13 +136,6 @@ var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
                 unsafe: true
             }
         }),
-        new CompressionPlugin({
-            asset: "[path].gz[query]",
-            algorithm: "gzip",
-            test: /\.js$|\.html$/,
-            threshold: 10240,
-            minRatio: 0.8
-        })
     ],
 });
 

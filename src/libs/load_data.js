@@ -1,13 +1,10 @@
 'use strict';
 
-'use strict';
-
-var _ = require('lodash');
-var fs = require('fs');
-var yaml = require('js-yaml');
-var glob = require('glob');
-var path = require('path');
-var gutil = require('gulp-util');
+import _ from "lodash";
+import fs from "fs";
+import yaml from "js-yaml";
+import path from "path";
+import gutil from "gulp-util";
 
 
 function loadData(name, context_root) {

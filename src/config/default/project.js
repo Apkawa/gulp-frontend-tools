@@ -1,6 +1,5 @@
 'use strict';
-
-var envs = require('../../libs/envs');
+import envs from "../../libs/envs";
 
 
 var options = {

@@ -9,13 +9,11 @@ before_script:
   - npm install -g gulp
   - gulp -v
 script:
-  #- npm run lint
   - yarn run build
 
   - rm -rf node_modules
 
   - cd examples
   - yarn
-  #- npm test
   - gulp build
   - gulp build --type=production

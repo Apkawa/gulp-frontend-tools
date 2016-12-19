@@ -1,6 +1,7 @@
 'use strict';
-var _ = require('lodash')
-var path = require('path');
+
+import path from "path";
+import _ from "lodash";
 import collect_filenames from "./collect_filenames";
 
 export default function getWebpackEntry(config) {

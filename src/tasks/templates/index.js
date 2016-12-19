@@ -1,11 +1,10 @@
+import _ from "lodash";
+import rename from "gulp-rename";
+import nunjucksRender from "gulp-nunjucks-render";
+import path from "path";
+import data from "gulp-data";
+
 import collect_filenames from "../../libs/collect_filenames";
-
-var _ = require('lodash');
-var rename = require("gulp-rename");
-var nunjucksRender = require('gulp-nunjucks-render');
-
-var path = require('path');
-var data = require('gulp-data');
 
 export default function (gulp, config) {
     const browserSyncOptions = config.browserSync;

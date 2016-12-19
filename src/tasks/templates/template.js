@@ -1,18 +1,15 @@
 'use strict';
-var gutil = require('gulp-util');
-var _ = require('lodash');
-var rename = require("gulp-rename");
-var nunjucksRender = require('gulp-nunjucks-render');
+import _ from "lodash";
+import gutil from "gulp-util";
 
-var path = require('path');
-var data = require('gulp-data');
-var plumber = require('gulp-plumber');
-var ignore = require('gulp-ignore');
-var debug = require('gulp-debug');
+import debug from "gulp-debug";
+import ignore from "gulp-ignore";
+import plumber from "gulp-plumber";
+import data from "gulp-data";
+import path from "path";
+import nunjucksRender from "gulp-nunjucks-render";
 
-
-var loadData = require('../../libs/load_data');
-
+import loadData from "../../libs/load_data";
 import ignoreTemplate from "../../libs/ignore_template";
 
 

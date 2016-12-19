@@ -1,5 +1,5 @@
 'use strict';
-var clean = require('gulp-clean');
+import clean from "gulp-clean";
 
 export default function (gulp, config) {
     const {project: {dist_root: DIST_ROOT}} = config;

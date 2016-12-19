@@ -1,13 +1,11 @@
 'use strict';
-import fs from 'fs';
-import path from 'path'
-import mkdirp from 'mkdirp';
-import _ from 'lodash';
-var ignore = require('gulp-ignore');
-import through from 'through-gulp';
-var loadData = require('../../libs/load_data');
-
-import ignoreTemplate  from '../../libs/ignore_template'
+import loadData from "../../libs/load_data";
+import ignore from "gulp-ignore";
+import fs from "fs";
+import path from "path";
+import mkdirp from "mkdirp";
+import through from "through-gulp";
+import ignoreTemplate from "../../libs/ignore_template";
 
 function add_context(context_root) {
     return through(

@@ -1,21 +1,19 @@
 import _ from "lodash";
-import webpackEntry from "../../libs/webpack_entry";
-var url = require('url');
-var path = require('path');
-var proxy = require('proxy-middleware');
-var stripAnsi = require('strip-ansi');
-var browserSync = require('browser-sync').create();
-
-
+import url from "url";
+import proxy from "proxy-middleware";
+import stripAnsi from "strip-ansi";
+import {create} from "browser-sync";
 /* Webpack */
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
+import webpack from "webpack";
+import webpackDevMiddleware from "webpack-dev-middleware";
+import webpackHotMiddleware from "webpack-hot-middleware";
+
+const browserSync = create();
 
 
 function buildProxyList(proxyObject) {
     return _.map(proxyObject, function (v, k) {
-        var proxyOptions = url.parse(v);
+        let proxyOptions = url.parse(v);
         proxyOptions.route = k;
         return proxy(proxyOptions);
     });
@@ -50,9 +48,9 @@ function getWebpackMiddlewares(webpackConfig) {
 function getBSOptions(options) {
     const webpack_options = options.webpack.getOptions(options);
 
-    var project = options.project;
+    const project = options.project;
 
-    var bs_options = {
+    let bs_options = {
         open: true,
         startPath: "",
         browser: 'google-chrome',

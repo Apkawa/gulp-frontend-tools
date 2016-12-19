@@ -1,7 +1,5 @@
-'use scrict';
-
-var path = require('path');
-var gutil = require('gulp-util');
+import path from "path";
+import gutil from "gulp-util";
 
 
 function getEnvs() {
