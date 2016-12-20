@@ -19,7 +19,7 @@ export default function (gulp, config) {
 
     function cssStream(stream, config) {
         let processors = [
-            autoprefixer({browsers: ['last 1 version']}),
+            autoprefixer({browsers: ['last 3 versions']}),
         ];
         if (config.envs.is_production) {
             processors.push(cssnano())
