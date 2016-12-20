@@ -16,7 +16,7 @@ export default function (gulp, config) {
     });
 
     gulp.task('build', () => {
-        runSequence.use(gulp)('clean', 'default', 'dist:gzip')
+        runSequence.use(gulp)('clean', 'default')
     })
 }
 
