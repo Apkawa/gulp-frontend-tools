@@ -40,6 +40,11 @@ var options = {
             'STATIC_ROOT': '"{{ project.static_root }}"',
         },
         eslint: false,
+        extract_css: {
+            filename: 'common.css',
+            options: {},
+
+        },
     },
     browserSync: {
         proxy: {

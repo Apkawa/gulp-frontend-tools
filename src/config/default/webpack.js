@@ -9,6 +9,7 @@ var webpack = require('webpack');
 var StringReplacePlugin = require('string-replace-webpack-plugin');
 var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 var CompressionPlugin = require("compression-webpack-plugin");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var envs = require('../../libs/envs');
 
@@ -160,6 +161,25 @@ function getOptions(config) {
             )
         );
     }
+
+    if (project_webpack.extract_css) {
+        let {filename, options} = project_webpack.extract_css
+        webpack_options.module.loaders = _.map(webpack_options.module.loaders, (o) => {
+            const {test, loaders} = o
+            if (test.test('.css') || test.test('.less') || test.test('.scss')) {
+                return {
+                    test, loader: ExtractTextPlugin.extract(
+                        "style-loader",
+                        _.map(_.slice(loaders, 1), (l) => `${l}-loader`)
+                    ),
+                }
+            }
+            return o
+        })
+
+        webpack_options.plugins.push(new ExtractTextPlugin(filename, options))
+    }
+
 
     /*    webpack_options.resolve.modulesDirectories = [
      ...webpack_options.resolve.modulesDirectories,
