@@ -46,6 +46,7 @@ function getWebpackMiddlewares(webpackConfig) {
 
 
 function getBSOptions(options) {
+    options.project.webpack.extract_css = false;
     const webpack_options = options.webpack.getOptions(options);
 
     const project = options.project;

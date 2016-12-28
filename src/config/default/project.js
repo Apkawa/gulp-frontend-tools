@@ -42,7 +42,9 @@ var options = {
         eslint: false,
         extract_css: {
             filename: 'common.css',
-            options: {},
+            options: {
+                allChunks: true,
+            },
 
         },
     },
