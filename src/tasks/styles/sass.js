@@ -1,4 +1,5 @@
 'use strict';
+import _ from 'lodash'
 import path from "path";
 import scsslint from "gulp-scss-lint";
 import sass from "gulp-sass";
@@ -8,7 +9,7 @@ import cssnano from "cssnano";
 import postcss from "gulp-postcss";
 import preprocess from "gulp-preprocess";
 import sourcemaps from "gulp-sourcemaps";
-
+import sassVariables from "gulp-sass-variables";
 
 export default function (gulp, config) {
     const APP_PATH = config.project.path.app;
@@ -29,8 +30,13 @@ export default function (gulp, config) {
     }
 
     gulp.task('sass', function () {
+        const context = config.project.context;
+        const variables = _.fromPairs(_.map(context, (v, k) => ['$' + k, v]));
+        console.log(variables)
+
         let stream = gulp.src(APP_PATH.scss + '/**/*.scss')
             .pipe(preprocess({context: config.project.context}))
+            .pipe(sassVariables(variables))
             .pipe(sourcemaps.init())
             .pipe(sassGlob(sassOpts))
             .pipe(sass(sassOpts).on('error', sass.logError));
