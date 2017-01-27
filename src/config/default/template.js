@@ -5,6 +5,9 @@ import moment from "moment";
 import {format as dateformat} from "dateformatter";
 import _loadData from "../../libs/load_data";
 
+import {i18nExtension} from '../../libs/nunjucks/i18n'
+import {Jinja2Extension} from '../../libs/nunjucks/jinja2'
+
 
 function loadData(name) {
     const options = require('../').project;
@@ -43,7 +46,15 @@ const globals = {
     url: function (url) {
         return url
     },
+    _: function (str) {
+        return str
+    }
 };
+
+const extensions = {
+    'i18n': i18nExtension,
+    'jinja2': Jinja2Extension,
+}
 
 const manageEnvironment = function (env) {
     _.each(filters, function (func, name) {
@@ -51,7 +62,9 @@ const manageEnvironment = function (env) {
     });
     _.each(globals, function (value, name) {
         env.addGlobal(name, value)
-
+    })
+    _.each(extensions, (value, name) => {
+        env.addExtension(name, new value);
     })
 };
 
