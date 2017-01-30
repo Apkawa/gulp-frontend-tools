@@ -7,7 +7,6 @@ import ignore from "gulp-ignore";
 import plumber from "gulp-plumber";
 import data from "gulp-data";
 import path from "path";
-import nunjucksRender from "gulp-nunjucks-render";
 import gulpNunjucks from 'gulp-nunjucks';
 
 import loadData from "../../libs/load_data";
