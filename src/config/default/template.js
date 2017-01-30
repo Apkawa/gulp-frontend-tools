@@ -67,13 +67,13 @@ const opts = {
     createEnv: function (template_options, global_config) {
         const {path, ...extra} = template_options;
         const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path), extra);
-        _.each(filters, function (func, name) {
+        _.each({...filters, ...template_options.filters || {}}, function (func, name) {
             env.addFilter(name, func);
         });
-        _.each(globals, function (value, name) {
+        _.each({...globals, ...template_options.globals || {},}, function (value, name) {
             env.addGlobal(name, value)
         })
-        _.each(extensions, (value, name) => {
+        _.each({...extensions, ...template_options.extensions || {}}, (value, name) => {
             env.addExtension(name, new value);
         })
         return env
