@@ -162,6 +162,7 @@ function getOptions(config) {
         );
     }
 
+    console.log(project_webpack);
     if (project_webpack.extract_css) {
         let {filename, options} = project_webpack.extract_css
         webpack_options.module.loaders = _.map(webpack_options.module.loaders, (o) => {
