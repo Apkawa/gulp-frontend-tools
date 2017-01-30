@@ -4,6 +4,7 @@ import humanize from "humanize";
 import moment from "moment";
 import {format as dateformat} from "dateformatter";
 import _loadData from "../../libs/load_data";
+import nunjucks from 'nunjucks'
 
 import {i18nExtension} from '../../libs/nunjucks/i18n'
 import {Jinja2Extension} from '../../libs/nunjucks/jinja2'
@@ -57,20 +58,26 @@ const extensions = {
 }
 
 const manageEnvironment = function (env) {
-    _.each(filters, function (func, name) {
-        env.addFilter(name, func);
-    });
-    _.each(globals, function (value, name) {
-        env.addGlobal(name, value)
-    })
-    _.each(extensions, (value, name) => {
-        env.addExtension(name, new value);
-    })
 };
 
 const opts = {
     path: "{{ project.template.root }}",
-    manageEnv: manageEnvironment
+    autoescape: true,
+    throwOnUndefined: false,
+    createEnv: function (template_options, global_config) {
+        const {path, ...extra} = template_options;
+        const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path), extra);
+        _.each(filters, function (func, name) {
+            env.addFilter(name, func);
+        });
+        _.each(globals, function (value, name) {
+            env.addGlobal(name, value)
+        })
+        _.each(extensions, (value, name) => {
+            env.addExtension(name, new value);
+        })
+        return env
+    },
 
 };
 

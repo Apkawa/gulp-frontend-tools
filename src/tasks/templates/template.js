@@ -8,6 +8,7 @@ import plumber from "gulp-plumber";
 import data from "gulp-data";
 import path from "path";
 import nunjucksRender from "gulp-nunjucks-render";
+import gulpNunjucks from 'gulp-nunjucks';
 
 import loadData from "../../libs/load_data";
 import ignoreTemplate from "../../libs/ignore_template";
@@ -43,14 +44,14 @@ export default function (gulp, config) {
         );
 
     }
-
+    const env = template_options.createEnv(template_options, config);
     gulp.task('templates:jinja2', function () {
         return gulp.src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: TEMPLATE_ROOT})
             .pipe(ignore.exclude(ignoreTemplate))
             .pipe(debug({title: "template"}))
             .pipe(data(getJsonData))
             .pipe(plumber(errorHandler))
-            .pipe(nunjucksRender(template_options))
+            .pipe(gulpNunjucks.compile({}, {env: env}))
             .pipe(plumber.stop())
             .pipe(gulp.dest(TEMPLATE_DIST_ROOT))
             .pipe(browserSync.stream())
