@@ -1,6 +1,6 @@
 {
   "name": "gulp-frontend-tools",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -102,6 +102,8 @@
     "string-replace-webpack-plugin": "0.0.4",
     "strip-ansi": "^3.0.1",
     "style-loader": "^0.13.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "webpack1",
     "syntax-error": "^1.1.5",
     "through-gulp": "^0.5.0",
     "through2": "^2.0.3",

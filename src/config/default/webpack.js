@@ -62,8 +62,12 @@ var webpack_options = {
         loaders: ['style-loader', 'css-loader', 'less-loader'],
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss|sass)$/,
         loaders: ['style-loader', 'css-loader', 'sass-loader', 'import-glob-loader'],
+      },
+      {
+        test: /\.styl$/,
+        loaders: ['style-loader', 'css-loader', 'stylus-loader'],
       },
 
       {
