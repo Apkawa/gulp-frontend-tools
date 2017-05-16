@@ -1,6 +1,6 @@
 {
   "name": "gulp-frontend-tools",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -113,6 +113,7 @@
     "var": "^0.2.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-named": "^1.1.0",
+    "vue-loader": "^12.0.4",
     "webpack": "^1.14.0",
     "webpack-dev-middleware": "^1.9.0",
     "webpack-dev-server": "^1.14.0",

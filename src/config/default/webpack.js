@@ -54,6 +54,10 @@ var webpack_options = {
         },
       },
       {
+        test: /\.vue$/,
+        loaders: ['vue-loader'],
+      },
+      {
         test: /\.css$/,
         loaders: ['style-loader', 'css-loader'],
       },
@@ -91,7 +95,7 @@ var webpack_options = {
         loader: 'url?limit=100000',
       },
       {
-        test: /\.swig$/,
+        test: /\.(swig|html)$/,
         loader: 'html',
       },
       {
