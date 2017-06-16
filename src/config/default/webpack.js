@@ -10,6 +10,7 @@ var StringReplacePlugin = require('string-replace-webpack-plugin')
 var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 var CompressionPlugin = require('compression-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 var envs = require('../../libs/envs')
 
@@ -19,11 +20,13 @@ const eslint_options = {
   configFile: '{{ project.eslint.configFile }}',
 
   preLoaders: [
-    { test: /\.jsx?$/, loaders: ['eslint-loader', 'source-map-loader'], exclude: /node_modules/ },
+    {test: /\.jsx?$/, loaders: ['eslint-loader', 'source-map-loader'], exclude: /node_modules/},
   ],
 }
 
-var webpack_options = {
+const css_loader = (importLoaders = 0) => 'css-loader?importLoaders=' + importLoaders
+
+let webpack_options = {
   cache: true,
   debug: true,
   watch: false,
@@ -59,19 +62,28 @@ var webpack_options = {
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        loaders: [
+          'style-loader', css_loader(1), 'postcss-loader'],
+
       },
       {
         test: /\.less$/,
-        loaders: ['style-loader', 'css-loader', 'less-loader'],
+        loaders: ['style-loader', css_loader(2), 'postcss-loader', 'less-loader'],
       },
+
       {
         test: /\.(scss|sass)$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader', 'import-glob-loader'],
+        loaders: [
+          'style-loader',
+          css_loader(3),
+          'postcss-loader',
+          'sass-loader',
+          'import-glob-loader',
+        ],
       },
       {
         test: /\.styl$/,
-        loaders: ['style-loader', 'css-loader', 'stylus-loader'],
+        loaders: ['style-loader', css_loader(1), 'stylus-loader'],
       },
 
       {
@@ -140,6 +152,13 @@ var webpack_options = {
     debug: 'empty',
     net: 'empty',
   },
+  postcss: () => {
+    return [
+      require('precss'),
+      require('autoprefixer'),
+      require('cssnano'),
+    ]
+  },
 }
 
 var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
@@ -150,7 +169,10 @@ var webpack_options_production = _.assign({}, _.cloneDeep(webpack_options), {
   plugins: [
     ...webpack_options.plugins,
     //https://habrahabr.ru/post/308926/
-    new LodashModuleReplacementPlugin(),
+    // new LodashModuleReplacementPlugin({
+    //   'collections': true,
+    //   'shorthands': true,
+    // }),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -173,7 +195,7 @@ if (envs.is_production) {
 }
 
 function getOptions (config) {
-  const { webpack: { options: webpack_options }, project: { context } } = config
+  const {webpack: {options: webpack_options}, project: {context}} = config
   const project_webpack = _.get(config, 'project.webpack', {})
   const defines = _.get(config, 'project.webpack.defines', {})
 
@@ -190,12 +212,11 @@ function getOptions (config) {
     )
   }
 
-  console.log(project_webpack)
   if (project_webpack.extract_css) {
-    let { filename, options } = project_webpack.extract_css
+    let {filename, options} = project_webpack.extract_css
     webpack_options.module.loaders = _.map(webpack_options.module.loaders, (o) => {
-      const { test, loaders } = o
-      if (test.test('.css') || test.test('.less') || test.test('.scss')) {
+      const {test, loaders} = o
+      if (test.test('.css') || test.test('.less') || test.test('.scss') || test.test('.sass')) {
         return {
           test, loader: ExtractTextPlugin.extract(
             'style-loader',
@@ -218,15 +239,22 @@ function getOptions (config) {
     new webpack.DefinePlugin(defines),
   )
   if (project_webpack.eslint) {
-    webpack_options.eslint = { configFile: eslint_options.configFile }
+    webpack_options.eslint = {configFile: eslint_options.configFile}
     webpack_options.module.preLoaders = eslint_options.preLoaders
   }
 
   if (context) {
-    const sassLoader = _.get(webpack_options, 'sassLoader.data') || '';
+    const sassLoader = _.get(webpack_options, 'sassLoader.data') || ''
     webpack_options.sassLoader = {
-      data: sassLoader + _.join(_.map(context, (v, k) => `$${k}: ${JSON.stringify(v)};`), '\n;')
+      data: sassLoader + _.join(_.map(context, (v, k) => `$${k}: ${JSON.stringify(v)};`), '\n;'),
     }
+  }
+  if (project_webpack.bundle_analyzer) {
+    let options = project_webpack.bundle_analyzer
+    if (!_.isPlainObject(options)) {
+      options = {}
+    }
+    webpack_options.plugins.push(new BundleAnalyzerPlugin(options))
   }
   return webpack_options
 }
