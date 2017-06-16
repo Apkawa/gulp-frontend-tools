@@ -156,7 +156,7 @@ let webpack_options = {
     return [
       require('precss'),
       require('autoprefixer'),
-      require('cssnano'),
+      require('cssnano')({zindex: false}),
     ]
   },
 }
