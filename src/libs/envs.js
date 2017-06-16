@@ -1,7 +1,6 @@
-'use scrict';
-
-var path = require('path');
-var gutil = require('gulp-util');
+import _ from 'lodash';
+import path from "path";
+import gutil from "gulp-util";
 
 
 function getEnvs() {
@@ -10,7 +9,11 @@ function getEnvs() {
         'project': gutil.env.project || "example",
         'lib_root': path.dirname(path.dirname(__dirname)),
     };
-    envs.is_production = envs.type == 'production';
+    envs = _.assign({}, gutil.env, envs);
+
+    envs.is_production = (envs.type == 'production' || envs.production);
+    envs.debug = !envs.is_production;
+
     return envs
 }
 

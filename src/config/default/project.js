@@ -1,6 +1,5 @@
 'use strict';
-
-var envs = require('../../libs/envs');
+import envs from "../../libs/envs";
 
 
 var options = {
@@ -31,15 +30,31 @@ var options = {
     template: {
         root: '{{ _.app_root }}/templates/',
         context: '{{ _.app_root }}/templates_context/',
+        dist: '{{ _.dist_root }}/templates/',
     },
     webpack: {
         entry_points: {},
-        publicPath: '{{ _.static_root }}js'
+        publicPath: '{{ _.static_root }}js/',
+        modules: [],
+        defines: {
+            'STATIC_ROOT': '"{{ project.static_root }}"',
+        },
+        eslint: false,
+        extract_css: {
+            filename: 'common.css',
+            options: {
+                allChunks: true,
+            },
+
+        },
     },
     browserSync: {
         proxy: {
             '/example': 'http://example.com/'
         },
+        webpack: {
+            public_path: '{{ _.static_root }}js'
+        }
     },
     sprite: {
         // a entry point

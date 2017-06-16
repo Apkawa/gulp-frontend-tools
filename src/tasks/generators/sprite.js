@@ -1,13 +1,11 @@
 'use strict';
 import _ from "lodash";
+import path from "path";
+import buffer from "vinyl-buffer";
+import merge from "merge-stream";
+import size from "gulp-size";
+import spritesmith from "gulp.spritesmith";
 
-var path = require('path');
-var buffer = require('vinyl-buffer');
-var merge = require('merge-stream');
-
-var spritesmith = require('gulp.spritesmith');
-
-var size = require('gulp-size');
 
 export default function (gulp, config) {
 

@@ -1,6 +1,4 @@
 'use strict';
-var gulp = require('gulp');
-
 import {pretty} from "js-object-pretty-print";
 
 export default function (gulp, config) {

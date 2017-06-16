@@ -1,27 +1,26 @@
 'use strict';
+import _ from 'lodash'
 import path from "path";
-var gulp = require('gulp');
-var scsslint = require('gulp-scss-lint');
-var sass = require('gulp-sass');
-var sassGlob = require('gulp-sass-glob');
-var autoprefixer = require('autoprefixer');
-var cssnano = require('cssnano');
-
-var postcss = require('gulp-postcss');
-var gulpif = require('gulp-if');
-var preprocess = require('gulp-preprocess');
-var sourcemaps = require('gulp-sourcemaps');
+import scsslint from "gulp-scss-lint";
+import sass from "gulp-sass";
+import sassGlob from "gulp-sass-glob";
+import autoprefixer from "autoprefixer";
+import cssnano from "cssnano";
+import postcss from "gulp-postcss";
+import preprocess from "gulp-preprocess";
+import sourcemaps from "gulp-sourcemaps";
+import sassVariables from "gulp-sass-variables";
 
 export default function (gulp, config) {
     const APP_PATH = config.project.path.app;
     const DIST_PATH = config.project.path.dist;
-
+    const SOURCE_MAP_DIST = path.join('..', path.basename(DIST_PATH.source_maps));
     const sassOpts = config.project.sass;
     const scss_lint_opts = config.project.scss_lint;
 
-    function cssStream(stream) {
-        var processors = [
-            autoprefixer({browsers: ['last 1 version']}),
+    function cssStream(stream, config) {
+        let processors = [
+            autoprefixer({browsers: ['last 3 versions']}),
         ];
         if (config.envs.is_production) {
             processors.push(cssnano())
@@ -31,15 +30,19 @@ export default function (gulp, config) {
     }
 
     gulp.task('sass', function () {
+        const context = config.project.context;
+        const variables = _.fromPairs(_.map(context, (v, k) => ['$' + k, v]));
+        console.log(variables)
 
-        let stream = gulp.src(APP_PATH.scss + '/**/[^_]*.scss')
+        let stream = gulp.src(APP_PATH.scss + '/**/*.scss')
             .pipe(preprocess({context: config.project.context}))
+            .pipe(sassVariables(variables))
             .pipe(sourcemaps.init())
             .pipe(sassGlob(sassOpts))
-            .pipe(sass(sassOpts).on('error', sass.logError))
+            .pipe(sass(sassOpts).on('error', sass.logError));
 
-        return cssStream(stream)
-            .pipe(sourcemaps.write(path.join('..', path.basename(DIST_PATH.source_maps))))
+        return cssStream(stream, config)
+            .pipe(sourcemaps.write(SOURCE_MAP_DIST))
             .pipe(gulp.dest(DIST_PATH.css))
     });
 
@@ -52,6 +55,6 @@ export default function (gulp, config) {
             .pipe(scsslint(scss_lint_opts))
     });
 
-    gulp.task('css', ['sass:lint', 'sass']);
+    gulp.task('css', ['sass']);
 
 }

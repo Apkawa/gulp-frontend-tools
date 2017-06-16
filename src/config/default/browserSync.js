@@ -1,20 +1,19 @@
 import _ from "lodash";
-import webpackEntry from "../../libs/webpack_entry";
-var url = require('url');
-var path = require('path');
-var proxy = require('proxy-middleware');
-var stripAnsi = require('strip-ansi');
-var browserSync = require('browser-sync').create();
-
-
+import url from "url";
+import proxy from "proxy-middleware";
+import stripAnsi from "strip-ansi";
+import {create} from "browser-sync";
 /* Webpack */
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
+import webpack from "webpack";
+import webpackDevMiddleware from "webpack-dev-middleware";
+import webpackHotMiddleware from "webpack-hot-middleware";
+
+const browserSync = create();
 
 
 function buildProxyList(proxyObject) {
     return _.map(proxyObject, function (v, k) {
-        var proxyOptions = url.parse(v);
+        let proxyOptions = url.parse(v);
         proxyOptions.route = k;
         return proxy(proxyOptions);
     });
@@ -22,7 +21,7 @@ function buildProxyList(proxyObject) {
 
 }
 
-function getWebpackMiddleware(webpackConfig) {
+function getWebpackMiddlewares(webpackConfig) {
     const publicPath = webpackConfig.output.publicPath;
     const bundler = webpack(webpackConfig);
     bundler.plugin('done', function (stats) {
@@ -33,24 +32,26 @@ function getWebpackMiddleware(webpackConfig) {
                 timeout: 100000
             });
         }
-        browserSync.reload();
+        //browserSync.reload();
     });
 
-    return webpackDevMiddleware(bundler, {
+    return [webpackDevMiddleware(bundler, {
         publicPath,
         stats: {colors: true},
-    })
+    }),
+        webpackHotMiddleware(bundler),
+    ]
 
 }
 
 
 function getBSOptions(options) {
-    var webpack_options = options.webpack;
-    webpack_options.entry = webpackEntry(options);
+    options.project.webpack.extract_css = false;
+    const webpack_options = options.webpack.getOptions(options);
 
-    var project = options.project;
+    const project = options.project;
 
-    var bs_options = {
+    let bs_options = {
         open: true,
         startPath: "",
         browser: 'google-chrome',
@@ -59,12 +60,10 @@ function getBSOptions(options) {
             routes: {},
             middleware: [
                 ...buildProxyList(_.get(project, 'browserSync.proxy', {})),
-                getWebpackMiddleware(webpack_options)
+                ...getWebpackMiddlewares(webpack_options)
             ],
         },
-        plugins: [
-            'bs-fullscreen-message'
-        ]
+        plugins: []
     };
     bs_options.server.routes[project.static_root] = project.dist_root;
 

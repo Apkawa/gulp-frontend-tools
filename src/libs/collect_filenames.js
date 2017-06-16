@@ -1,8 +1,7 @@
 'use strict';
-var _ = require('lodash');
-var fs = require('fs');
-var glob = require('glob');
-var path = require('path');
+import _ from "lodash";
+import glob from "glob";
+import path from "path";
 
 function collect_filenames(entry_root, glob_expr, opts = {}) {
     const {relativeDir} = opts;

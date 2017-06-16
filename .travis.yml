@@ -1,0 +1,30 @@
+language: node_js
+dist: trusty
+node_js:
+  - node
+  - 6
+  - 5
+  - 4
+
+cache: yarn
+apt:
+  sources:
+    - ubuntu-toolchain-r-test
+  packages:
+    - g++-4.8
+
+env:
+  - CXX=g++-4.8
+
+before_script:
+  - npm install -g gulp
+  - gulp -v
+script:
+  - yarn run build
+
+  - rm -rf node_modules
+
+  - cd examples
+  - yarn
+  - gulp build
+  - gulp build --type=production
