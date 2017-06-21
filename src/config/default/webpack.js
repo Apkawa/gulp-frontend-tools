@@ -154,9 +154,9 @@ let webpack_options = {
   },
   postcss: () => {
     return [
-      require('precss'),
+      // require('precss'),
       require('autoprefixer'),
-      require('cssnano')({zindex: false}),
+      // require('cssnano')({zindex: false}),
     ]
   },
 }
