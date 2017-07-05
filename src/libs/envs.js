@@ -1,20 +1,21 @@
-import _ from 'lodash';
-import path from "path";
-import gutil from "gulp-util";
+import _ from 'lodash'
+import path from 'path'
+import gutil from 'gulp-util'
 
+function getEnvs () {
+  const lib_root = path.dirname(path.dirname(__dirname))
 
-function getEnvs() {
-    var envs = {
-        'type': gutil.env.type,
-        'project': gutil.env.project || "example",
-        'lib_root': path.dirname(path.dirname(__dirname)),
-    };
-    envs = _.assign({}, gutil.env, envs);
+  let { ...envs, _} = gutil.env
+  envs = {
+    ...envs,
+    lib_root
+  }
 
-    envs.is_production = (envs.type == 'production' || envs.production);
-    envs.debug = !envs.is_production;
+  console.log(gutil.env)
+  envs.is_production = (envs.type === 'production' || Boolean(gutil.env.production))
+  envs.debug = !envs.is_production
 
-    return envs
+  return envs
 }
 
-module.exports = getEnvs();
+module.exports = getEnvs()

@@ -1,13 +1,21 @@
 {
   "presets": [
-    "es2015"
+    [
+      "es2015",
+      {
+        "modules": "commonjs"
+      }
+    ],
+    "react"
   ],
   "plugins": [
+    "lodash",
     "add-module-exports",
     "transform-decorators-legacy",
     "transform-class-properties",
     "transform-object-rest-spread",
     "transform-react-constant-elements",
-    "transform-react-inline-elements"
+    "transform-react-inline-elements",
+    "dynamic-import-webpack"
   ]
 }

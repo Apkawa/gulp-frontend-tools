@@ -1,7 +1,7 @@
 @import "variables";
 .test {
   .example {
-    background-color: #000;;
-    background-image: url('#{$static-root}/test.png');
+    background-color: #000;
+    background-image: url('#{$STATIC_ROOT}/test.png');
   }
 }

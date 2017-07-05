@@ -19,7 +19,6 @@ export default function optionsRenderer(data, opts = {depth: 10}) {
                 context[key] = value
             }
             return [key, value]
-
         }))
     }
     return data
