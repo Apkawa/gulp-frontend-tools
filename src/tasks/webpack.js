@@ -4,7 +4,7 @@ import gutil from "gulp-util";
 
 export default function (gulp, config) {
 
-    const webpack_options = config.webpack.getOptions(config);
+    const webpack_options = config.webpack.getConfig(config);
 
     gulp.task('webpack:watch', function (callback) {
         webpack_options.watch = true;

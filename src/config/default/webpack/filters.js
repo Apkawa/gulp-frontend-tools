@@ -1,16 +1,20 @@
 'use strict'
 import _ from 'lodash'
+import path from 'path'
 import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import envs from '../../../libs/envs'
 
+function getProjectWebpack (config) {
+  return _.omit(_.get(config, 'webpack', {}), ['getConfig', 'config'])
+}
+
 export function productionFilter (webpack_options, config) {
   if (!envs.is_production) {
     return webpack_options
   }
-  console.log('Production')
   return {
     ...webpack_options,
     cache: false,
@@ -39,7 +43,7 @@ export function productionFilter (webpack_options, config) {
 }
 
 export function hotFilter (webpack_options, config) {
-  const project_webpack = _.get(config, 'project.webpack', {})
+  const project_webpack = getProjectWebpack(config)
   if (project_webpack.hot && envs.debug) {
     webpack_options.devServer = {
       hot: true,
@@ -59,7 +63,7 @@ export function hotFilter (webpack_options, config) {
 }
 
 export function extractCss (webpack_options, config) {
-  const extract_css = _.get(config, 'project.webpack.extract_css')
+  const extract_css = _.get(getProjectWebpack(config), 'extract_css')
   if (extract_css) {
     const {filename, options} = extract_css
 
@@ -82,7 +86,7 @@ export function extractCss (webpack_options, config) {
 }
 
 export function definesFilter (webpack_options, config) {
-  const defines = _.get(config, 'project.webpack.defines', {})
+  const defines = _.get(getProjectWebpack(config), 'defines', {})
   webpack_options.plugins.unshift(
     new webpack.DefinePlugin(defines),
   )
@@ -122,7 +126,7 @@ export function sassFilter (webpack_options, config) {
 }
 
 export function bundleAnalyzerFilter (webpack_options, config) {
-  let bundleAnalyzerOptions = _.get(config, 'project.webpack.bundle_analyzer')
+  let bundleAnalyzerOptions = _.get(getProjectWebpack(config), 'bundle_analyzer')
   if (bundleAnalyzerOptions && env.debug) {
     if (!_.isPlainObject(bundleAnalyzerOptions)) {
       bundleAnalyzerOptions = {}
@@ -133,7 +137,7 @@ export function bundleAnalyzerFilter (webpack_options, config) {
 }
 
 export function providePluginFilter (webpack_options, config) {
-  const providePlugin = _.get(webpack_options, 'providePlugin', {})
+  const providePlugin = _.get(getProjectWebpack(config), 'providePlugin', {})
   webpack_options.plugins.push(
     new webpack.ProvidePlugin({
       ...providePlugin,
@@ -149,9 +153,28 @@ export function lodashFilter (webpack_options, config) {
     'collections': true,
     'paths': true,
     'shorthands': true,
-    ..._.get(webpack_options, 'lodashPlugin')
+    ..._.get(getProjectWebpack(config), 'lodashPlugin')
   })
   delete webpack_options.lodashPlugin
+  return webpack_options
+}
+
+export function commonChunkFilter (webpack_options, config) {
+  const name = _.get(getProjectWebpack(config), 'commonChunk', 'common.js')
+
+  if (name) {
+    let opts = name
+    if (_.isString(name)) {
+      opts = {
+        name: path.basename(name, '.js'),
+        filename: name,
+        minChunks: 2,
+      }
+    }
+    webpack_options.plugins.push(
+      new webpack.optimize.CommonsChunkPlugin(opts),
+    )
+  }
   return webpack_options
 }
 
@@ -161,8 +184,9 @@ export default  [
   definesFilter,
   sassFilter,
   providePluginFilter,
+  lodashFilter,
+  commonChunkFilter,
   extractCss,
   bundleAnalyzerFilter,
-  lodashFilter,
 ]
 

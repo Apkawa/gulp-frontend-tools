@@ -15,6 +15,7 @@ export default function (gulp, config) {
     const APP_PATH = config.project.path.app;
     const DIST_PATH = config.project.path.dist;
     const SOURCE_MAP_DIST = path.join('..', path.basename(DIST_PATH.source_maps));
+
     const sassOpts = config.project.sass;
     const scss_lint_opts = config.project.scss_lint;
 
@@ -32,7 +33,6 @@ export default function (gulp, config) {
     gulp.task('sass', function () {
         const context = config.project.context;
         const variables = _.fromPairs(_.map(context, (v, k) => ['$' + k, v]));
-        console.log(variables)
 
         let stream = gulp.src(APP_PATH.scss + '/**/*.scss')
             .pipe(preprocess({context: config.project.context}))

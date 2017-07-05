@@ -27,11 +27,24 @@ const postcssLoader = {
 }
 
 const EXTRA_OPTIONS = {
-  providePlugin: null,
+  hot: true,
+  eslint: false,
+  providePlugin: {},
+  entry_points: {},
+  defines: {
+    'STATIC_ROOT': '"{{ project.static_root }}"',
+  },
+  publicPath: '{{ project.static_root }}js/',
+  commonChunk: 'common.js',
+  extract_css: {
+    filename: 'common.css',
+    options: {
+      allChunks: true,
+    },
+  },
 }
 
 const WEBPACK_OPTIONS = {
-  ...EXTRA_OPTIONS,
   cache: true,
   watch: false,
   devtool: 'cheap-module-eval-source-map',
@@ -40,7 +53,7 @@ const WEBPACK_OPTIONS = {
     path: '{{ project.path.dist.js }}',
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
-    publicPath: '{{ project.webpack.publicPath }}',
+    publicPath: '{{ webpack.publicPath }}',
     sourceMapFilename: '../_maps/[file].map',
   },
   module: {
@@ -146,11 +159,6 @@ const WEBPACK_OPTIONS = {
   },
   plugins: [
     new StringReplacePlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'commons',
-      filename: 'commons.js',
-      minChunks: 2,
-    }),
   ],
   node: {
     fs: 'empty',
@@ -163,18 +171,18 @@ const WEBPACK_OPTIONS = {
   },
 }
 
-function getOptions (config) {
-  let webpack_options = _.get(config, 'webpack.options')
+function getConfig (config) {
+  let webpack_options = _.get(config, 'webpack.config')
   webpack_options.entry = webpackEntry(config)
 
-  for (let i in FILTERS) {
-    const filter = FILTERS[i]
+  for (let filter of FILTERS) {
     webpack_options = filter(webpack_options, config)
   }
   return webpack_options
 }
 
 export default {
-  getOptions,
-  options: WEBPACK_OPTIONS,
+  getConfig,
+  ...EXTRA_OPTIONS,
+  config: WEBPACK_OPTIONS,
 }

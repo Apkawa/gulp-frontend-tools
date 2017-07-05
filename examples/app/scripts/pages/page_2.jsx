@@ -9,7 +9,7 @@ export default class PageTwo extends React.Component {
     return (
       <div>
         <h1 className={style.head}>Page two</h1>
-        <ul className={style.example}>
+        <ul className={style.example_2}>
           {_.map([1, 2, 3], v => <li>{v}</li>)}
         </ul>
       </div>

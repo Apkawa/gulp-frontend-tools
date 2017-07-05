@@ -1,22 +1,25 @@
-var gulp = require('gulp')
-var initGulpTasks = require('..')
+const gulp = require('gulp')
+const Tools = require('..')
 
-var config = {
-  project: {
-    webpack: {
-      hot: false,
-      bundle_analyzer: false,
-      defines: {
-        EXAMPLE_DEFINE: '\'{{ envs.example_define|default("no_defined") }}\'',
-      },
-    },
-  },
+const config = {
   webpack: {
-    options: {
-      providePlugin: {
-        $: 'cash-dom',
-      },
+    hot: true,
+    extract_css: false,
+    bundle_analyzer: false,
+    providePlugin: {
+      $: 'cash-dom',
     },
   },
 }
-initGulpTasks(gulp, config, __dirname)
+
+Tools(gulp, config)
+  .task('example', (gulp, config) => {
+    gulp.task('example', () => {
+      console.log(config.example)
+    })
+  })
+  .configHook((config) => {
+    config.example = 'EXAMPLE nya!'
+    return config
+  })
+  .run()
