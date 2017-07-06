@@ -5,3 +5,10 @@
 .example_2 {
   background-color: bisque;
 }
+
+.example_url {
+  background-image: url(../../../app/images/sprites/ok.png);
+  background-image: url(../../images/sprites/ok.png);
+  background-image: url(~app/images/sprites/ok.png);
+  background-image: url(~images/sprites/ok.png);
+}

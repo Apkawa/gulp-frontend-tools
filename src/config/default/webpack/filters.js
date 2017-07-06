@@ -63,25 +63,43 @@ export function hotFilter (webpack_options, config) {
 }
 
 export function extractCss (webpack_options, config) {
+  const modify_rules = (loaders) => {
+    const opts = {
+      fallback: loaders[0],
+      use: _.map(_.slice(loaders, 1), (l) => l),
+    }
+    return ExtractTextPlugin.extract(opts)
+  }
   const extract_css = _.get(getProjectWebpack(config), 'extract_css')
-  if (extract_css) {
-    const {filename, options} = extract_css
+  if (!extract_css) {
+    return webpack_options
+  }
 
-    webpack_options.module.rules = _.map(webpack_options.module.rules, (o) => {
-      const {test, use: loaders} = o
-      if (test.test('.css') || test.test('.less') || test.test('.scss') || test.test('.sass')) {
-        const use = ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: _.map(_.slice(loaders, 1), (l) => l),
-        })
+  const {filename = '/common.css', options = {}} = extract_css
+
+  webpack_options.module.rules = _.map(webpack_options.module.rules, (loader_rule) => {
+    const {test, use: loaders, oneOf, rules} = loader_rule
+
+    if (test.test('.css') || test.test('.less') || test.test('.scss') || test.test('.sass') || test.test('.styl')) {
+      const [key, subRules] = _.filter(_.map({oneOf, rules}, (v, k) => v ? [k, v] : v))[0] || [undefined, undefined]
+      if (key) {
         return {
-          test, use,
+          test,
+          [key]: _.map(subRules, ({use, ..._l}) => ({use: modify_rules(use), ..._l})),
         }
       }
-      return o
-    })
-    webpack_options.plugins.push(new ExtractTextPlugin({filename: filename, ...options}))
-  }
+      return {
+        test, use: modify_rules(loaders),
+      }
+    }
+    return loader_rule
+  })
+  webpack_options.plugins.push(
+    new ExtractTextPlugin({
+      filename: filename,
+      allChunks: true,
+      ...options
+    }))
   return webpack_options
 }
 
@@ -94,32 +112,47 @@ export function definesFilter (webpack_options, config) {
 
 }
 export function sassFilter (webpack_options, config) {
+  const updateLoaders = (loader) => {
+    if (_.isArray(loader)) {
+      return _.map(loader, updateLoaders)
+    }
+    if (_.isString(loader) && loader === 'sass-loader') {
+      loader = {
+        loader,
+        options: {},
+      }
+    }
+    if (loader.loader === 'sass-loader') {
+      const defineData = _.join(_.map(context, (v, k) => `$${k}: ${JSON.stringify(v)};`), '\n;')
+      loader.options.data = (loader.options.data || '') + defineData
+    }
+    return loader
+  }
+
   const context = _.get(config, 'project.context')
   if (_.isEmpty(context)) {
     return webpack_options
   }
   webpack_options.module.rules = _.map(webpack_options.module.rules, (o) => {
-    const {test, use, ..._o} = o
+    const {test, use, oneOf, rules, ..._o} = o
     if (!(test.test('.scss') || test.test('.sass'))) {
       return o
     }
+
+    const [key, _rules] = _.filter(_.map({oneOf, rules}, (v, k) => v ? [k, v] : v))[0] || [undefined, undefined]
+    console.log(key, rules)
+    if (key) {
+      return {
+        test,
+        ..._o,
+        [key]: _.map(_rules, ({use, ...r}) => ({use: updateLoaders(use), ...r})),
+      }
+    }
+    console.log(_o)
     return {
       test,
       ..._o,
-      use: _.map(use, (loader) => {
-        if (_.isString(loader) && loader === 'sass-loader') {
-          loader = {
-            loader,
-            options: {},
-            ..._o
-          }
-        }
-        if (loader.loader === 'sass-loader') {
-          const defineData = _.join(_.map(context, (v, k) => `$${k}: ${JSON.stringify(v)};`), '\n;')
-          loader.options.data = (loader.options.data || '') + defineData
-        }
-        return loader
-      }),
+      use: updateLoaders(use),
     }
   })
   return webpack_options

@@ -46,6 +46,7 @@ function getWebpackMiddlewares (webpackConfig) {
 function getBSConfig (config) {
   // options.webpack.extract_css = false;
   const webpack_options = config.webpack.getConfig(config)
+  const proxyOptions = _.get(config, 'browserSync.proxy', {})
   const bsOptions = _.omit(config.browserSync, ['browserSync', 'getBSConfig', 'proxy'])
   const project = config.project
 
@@ -57,7 +58,7 @@ function getBSConfig (config) {
       baseDir: project.dist_root,
       routes: {},
       middleware: [
-        ...buildProxyList(_.get(bsOptions, 'proxy', {})),
+        ...buildProxyList(proxyOptions),
         ...getWebpackMiddlewares(webpack_options)
       ],
     },

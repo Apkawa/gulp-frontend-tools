@@ -16,6 +16,7 @@ export default function (override_options) {
     options = deepmerge(options, override_options)
   } catch (err) {
     // noop
+    console.error(err)
   }
   options.envs = {...options.envs, ...envs, root}
   options = optionsRenderer(options)

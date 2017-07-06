@@ -8,26 +8,43 @@ const webpack = require('webpack')
 const StringReplacePlugin = require('string-replace-webpack-plugin')
 
 const envs = require('../../../libs/envs')
+console.log(envs)
 
 import webpackEntry from '../../../libs/webpack_entry'
 import FILTERS from './filters'
+import postcss_autoprefixer from 'autoprefixer'
+import postcss_precss from 'precss'
 
-const cssLoader = (importLoaders = 0) => 'css-loader?modules=true&importLoaders=' + importLoaders
+const cssLoader = (importLoaders = 0, modules = undefined) => ({
+    loader: 'css-loader',
+    query: {
+      modules,
+      importLoaders,
+      sourceMap: true,
+      localIdentName: envs.is_production
+        ? '[hash:base64]'
+        : '[path]__[name]__[local]--[hash:base64:5]',
+    },
+  }
+)
+const styleLoader = {
+  loader: 'style-loader',
+  options: {
+    sourceMap: true,
+  },
+}
+
 const postcssLoader = {
   loader: 'postcss-loader',
   options: {
-    plugins: () => {
-      return [
-        require('precss'),
-        require('autoprefixer'),
-        // require('cssnano')({zindex: false}),
-      ]
-    },
+    sourceMap: true,
+    plugins: [],
   },
 }
 
 const EXTRA_OPTIONS = {
   hot: true,
+  gzip: false,
   eslint: false,
   providePlugin: {},
   entry_points: {},
@@ -60,7 +77,6 @@ const WEBPACK_OPTIONS = {
     rules: [
       {
         test: /\.jsx?$/,
-        include: ['{{ project.path.app.js }}'],
         exclude: [/node_modules/, /vendors/],
         loader: 'babel-loader',
       },
@@ -70,39 +86,90 @@ const WEBPACK_OPTIONS = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          cssLoader(1),
-          postcssLoader,
+        oneOf: [
+          {
+            resourceQuery: /\?module/,
+            use: [
+              styleLoader,
+              cssLoader(0, true),
+            ],
+          },
+          {
+            use: [
+              styleLoader,
+              cssLoader(0),
+            ],
+          },
         ],
       },
       {
         test: /\.less$/,
-        use: [
-          'style-loader',
-          cssLoader(2),
-          postcssLoader,
-          'less-loader',
+        oneOf: [
+          {
+            resourceQuery: /\?module/,
+            use: [
+              styleLoader,
+              cssLoader(1, true),
+              'less-loader',
+            ],
+          },
+          {
+            use: [
+              styleLoader,
+              cssLoader(1),
+              'less-loader',
+            ],
+          },
         ],
       },
-
       {
         test: /\.(scss|sass)$/,
-        use: [
-          'style-loader',
-          cssLoader(3),
-          postcssLoader,
-          'sass-loader',
-          'import-glob-loader',
+        oneOf: [
+          {
+            resourceQuery: /\?module/,
+            use: [
+              styleLoader,
+              cssLoader(2, true),
+              'sass-loader',
+              'import-glob-loader',
+            ],
+          },
+          {
+            use: [
+              styleLoader,
+              cssLoader(2),
+              {
+                loader: 'sass-loader',
+                options: {
+                  sourceMap: true,
+                },
+              },
+              'import-glob-loader',
+            ],
+
+          },
         ],
       },
       {
         test: /\.styl$/,
-        use: [
-          'style-loader',
-          cssLoader(1),
-          'stylus-loader',
+        oneOf: [
+          {
+            resourceQuery: /\?module/,
+            use: [
+              styleLoader,
+              cssLoader(1, true),
+              'stylus-loader',
+            ],
+          },
+          {
+            use: [
+              styleLoader,
+              cssLoader(1),
+              'stylus-loader',
+            ],
+          },
         ],
+
       },
 
       {
@@ -171,13 +238,24 @@ const WEBPACK_OPTIONS = {
   },
 }
 
+let __COMPILED
+
 function getConfig (config) {
+  if (__COMPILED) {
+    return __COMPILED
+  }
   let webpack_options = _.get(config, 'webpack.config')
   webpack_options.entry = webpackEntry(config)
 
   for (let filter of FILTERS) {
-    webpack_options = filter(webpack_options, config)
+    try {
+      webpack_options = filter(webpack_options, config)
+    } catch (err) {
+      throw err
+
+    }
   }
+  __COMPILED = webpack_options
   return webpack_options
 }
 

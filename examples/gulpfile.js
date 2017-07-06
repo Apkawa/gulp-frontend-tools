@@ -4,7 +4,7 @@ const Tools = require('..')
 const config = {
   webpack: {
     hot: true,
-    extract_css: false,
+    extract_css: true,
     bundle_analyzer: false,
     providePlugin: {
       $: 'cash-dom',
