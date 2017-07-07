@@ -1,19 +1,16 @@
 /**
  * Created by apkawa on 28.08.16.
  */
+import webpack from 'webpack'
 
-const _ = require('lodash')
-const path = require('path')
-const webpack = require('webpack')
-const StringReplacePlugin = require('string-replace-webpack-plugin')
+import _ from 'lodash'
+import gutil from 'gulp-util'
 
-const envs = require('../../../libs/envs')
-console.log(envs)
+import StringReplacePlugin from 'string-replace-webpack-plugin'
 
+import envs from '../../../libs/envs'
 import webpackEntry from '../../../libs/webpack_entry'
 import FILTERS from './filters'
-import postcss_autoprefixer from 'autoprefixer'
-import postcss_precss from 'precss'
 
 const cssLoader = (importLoaders = 0, modules = undefined) => ({
     loader: 'css-loader',
@@ -46,6 +43,7 @@ const EXTRA_OPTIONS = {
   hot: true,
   gzip: false,
   eslint: false,
+  bundle_analyzer: envs.bundle_analyzer,
   providePlugin: {},
   entry_points: {},
   defines: {

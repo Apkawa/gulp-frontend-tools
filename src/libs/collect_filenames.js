@@ -3,7 +3,7 @@ import _ from "lodash";
 import glob from "glob";
 import path from "path";
 
-function collect_filenames(entry_root, glob_expr, opts = {}) {
+export default function collect_filenames(entry_root, glob_expr, opts = {}) {
     const {relativeDir} = opts;
     const files = glob.sync(entry_root + glob_expr);
     const points = {};
@@ -24,4 +24,3 @@ function collect_filenames(entry_root, glob_expr, opts = {}) {
     return points
 }
 
-module.exports = collect_filenames;

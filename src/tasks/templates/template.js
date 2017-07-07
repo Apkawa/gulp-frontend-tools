@@ -11,7 +11,7 @@ import data from 'gulp-data'
 import gulpNunjucks from 'gulp-nunjucks'
 import rename from 'gulp-rename'
 
-import loadData from '../../libs/load_data'
+import loadData from '../../libs/loadData'
 import ignoreTemplate from '../../libs/ignore_template'
 
 export default function (gulp, config) {

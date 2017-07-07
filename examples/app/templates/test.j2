@@ -11,5 +11,18 @@
 
 <h1>{{ title }}</h1>
 {{ content }} annmadss
+
+{% trans %}
+Example two
+{% endtrans %}
+{% trans count=123 %}
+Example {{ count }}
+{% pluralize %}
+Examples {{ count }}
+{% endtrans %}
+
+{% trans v=content %}
+Example with content v={{ v}}
+{% endtrans %}
 </body>
 </html>

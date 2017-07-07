@@ -160,7 +160,8 @@ export function sassFilter (webpack_options, config) {
 
 export function bundleAnalyzerFilter (webpack_options, config) {
   let bundleAnalyzerOptions = _.get(getProjectWebpack(config), 'bundle_analyzer')
-  if (bundleAnalyzerOptions && env.debug) {
+  console.log(bundleAnalyzerOptions)
+  if (bundleAnalyzerOptions) {
     if (!_.isPlainObject(bundleAnalyzerOptions)) {
       bundleAnalyzerOptions = {}
     }
@@ -193,21 +194,21 @@ export function lodashFilter (webpack_options, config) {
 }
 
 export function commonChunkFilter (webpack_options, config) {
-  const name = _.get(getProjectWebpack(config), 'commonChunk', 'common.js')
-
-  if (name) {
-    let opts = name
-    if (_.isString(name)) {
-      opts = {
-        name: path.basename(name, '.js'),
-        filename: name,
-        minChunks: 2,
-      }
-    }
-    webpack_options.plugins.push(
-      new webpack.optimize.CommonsChunkPlugin(opts),
-    )
+  config = _.get(getProjectWebpack(config), 'commonChunk', 'common.js')
+  if (!config) {
+    return webpack_options
   }
+  if (_.isString(config)) {
+    config = {
+      name: path.basename(config, '.js'),
+      filename: config,
+      minChunks: 2,
+    }
+  }
+
+  webpack_options.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin(config),
+  )
   return webpack_options
 }
 
@@ -222,4 +223,3 @@ export default  [
   extractCss,
   bundleAnalyzerFilter,
 ]
-

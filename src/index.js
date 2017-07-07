@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import requireDir from 'require-dir'
-import buildConfig from './config'
+import config from './config'
 
 function evalTasks (wrap_func, gulp, compiled_config) {
   if (_.isFunction(wrap_func)) {
@@ -36,7 +36,7 @@ class Tools {
   }
 
   run () {
-    let compiled_config = buildConfig(this.raw_config)
+    let compiled_config = config.render_config(this.raw_config)
     for (let func of this._configHook) {
       compiled_config = func(compiled_config, this.raw_config)
     }

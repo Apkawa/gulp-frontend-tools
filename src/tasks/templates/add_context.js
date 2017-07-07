@@ -1,5 +1,5 @@
 'use strict';
-import loadData from "../../libs/load_data";
+import loadData from "../../libs/loadData";
 import ignore from "gulp-ignore";
 import fs from "fs";
 import path from "path";
