@@ -174,8 +174,7 @@ export function providePluginFilter (webpack_options, config) {
   const providePlugin = _.get(getProjectWebpack(config), 'providePlugin', {})
   webpack_options.plugins.push(
     new webpack.ProvidePlugin({
-      ...providePlugin,
-      Promise: 'es6-promise',
+      ...providePlugin
     }))
   delete webpack_options.providePlugin
   return webpack_options
