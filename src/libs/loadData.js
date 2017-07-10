@@ -1,10 +1,12 @@
 'use strict'
 
-import _ from "lodash";
-import fs from "fs";
-import yaml from "js-yaml";
-import path from "path";
-import gutil from "gulp-util";
+import _ from 'lodash'
+import fs from 'fs'
+import yaml from 'js-yaml'
+import path from 'path'
+import gutil from 'gulp-util'
+
+import config from '../config'
 
 export function loadData (name, context_root) {
   const parsed = path.parse(path.normalize(name))
@@ -19,11 +21,11 @@ export function loadData (name, context_root) {
     var _fname = context_path + ext
     //console.log('_fname', _fname);
     try {
-      if (ext == '.yaml') {
+      if (ext === '.yaml') {
         _context = yaml.safeLoad(fs.readFileSync(_fname, 'utf8'))
       } else {
         // Try context from js file
-        if (ext == '.json') {
+        if (ext === '.json') {
           _context = JSON.parse(fs.readFileSync(_fname, 'utf8'))
         } else {
           _context = require(_fname)
@@ -40,8 +42,10 @@ export function loadData (name, context_root) {
   return _context
 }
 
-export function loadContext (name) {
-  return loadData(name, config.get('template.context'))
+export function loadContext (name, context_root) {
+  context_root = context_root || config.get('project.template.context')
+  console.log("CONFIG", context_root)
+  return loadData(name, context_root)
 }
 
 export default loadData

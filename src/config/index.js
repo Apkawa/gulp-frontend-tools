@@ -10,7 +10,7 @@ class Config {
   }
 
   get (path, default_value) {
-    return _.get(this.confg, path, default_value)
+    return _.get(this.config, path, default_value)
   }
 
   set (path, value) {

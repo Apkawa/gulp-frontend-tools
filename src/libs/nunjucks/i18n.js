@@ -2,11 +2,32 @@
 import _ from 'lodash'
 import nunjucks from 'nunjucks'
 
-export function i18nExtension () {
-  // http://jinja.pocoo.org/docs/2.9/templates/#i18n
-  this.tags = ['trans']
+export class i18nExtension {
 
-  function parseSignature (parser, nodes, lexer) {
+  // http://jinja.pocoo.org/docs/2.9/templates/#i18n
+  tags = ['trans']
+  globals = {
+    get_current_language() {
+      return 'ru'
+    },
+    get_available_languages() {
+      return [['ru', 'Russian'], ['en', 'English']]
+    },
+    get_language_info() {
+      return {
+        'name': 'Russian',
+        'name_local': 'Русский',
+        'code': 'ru',
+        'bidi': false,
+      }
+    },
+  }
+
+  constructor (env) {
+    _.each(this.globals, (v, name) => env.addGlobal(name, v))
+  }
+
+  parseSignature (parser, nodes, lexer) {
     let tok = parser.peekToken()
     // parse the args and move after the block end. passing true
     // as the second arg is required if there are no parentheses
@@ -35,12 +56,12 @@ export function i18nExtension () {
     return args
   }
 
-  this.parse = function (parser, nodes, lexer) {
+  parse (parser, nodes, lexer) {
     // get the tag token
     var tok = parser.nextToken()
     const name = tok.value
 
-    const args = parseSignature(parser, nodes, lexer)
+    const args = this.parseSignature(parser, nodes, lexer)
 
     parser.advanceAfterBlockEnd(name)
 
@@ -59,15 +80,15 @@ export function i18nExtension () {
     return new nodes.CallExtension(this, 'run', args, blocks)
   }
 
-  this.run = function (context, ...args) {
+  run (context, ...args) {
     let kwargs, body, pluralBody
-    if (args.length == 1) {
+    if (args.length === 1) {
       [body] = args
     }
-    if (args.length == 2) {
+    if (args.length === 2) {
       [kwargs, body] = args
     }
-    if (args.length == 3) {
+    if (args.length === 3) {
       [kwargs, body, pluralBody] = args
     }
 

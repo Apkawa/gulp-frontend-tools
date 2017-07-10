@@ -10,7 +10,7 @@ export default function (gulp, config) {
 
     function watch(glob, tasks, reload = false) {
         if (reload) {
-            tasks.push(browserSync.reload)
+            tasks.push(() => browserSync.reload(glob))
         }
         return gulp.watch(glob, tasks)
     }

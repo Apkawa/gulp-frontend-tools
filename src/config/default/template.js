@@ -22,6 +22,7 @@ const filters = {
     return humanize.numberFormat(input, 2, ',', ' ')
   },
   date: function (input, format) {
+    console.log("INPUT", input)
     var dt = moment(input)
     return dateformat(format, dt)
   },
@@ -66,7 +67,7 @@ const opts = {
     })
 
     _.each({...extensions, ...template_options.extensions || {}}, (value, name) => {
-      env.addExtension(name, new value)
+      env.addExtension(name, new value(env))
     })
 
     return env

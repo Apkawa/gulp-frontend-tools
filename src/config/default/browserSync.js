@@ -66,7 +66,6 @@ function getBSConfig (config) {
     ...bsOptions
   }
   compiledBsOptions.server.routes[project.static_root] = project.dist_root
-  console.log(compiledBsOptions)
   return compiledBsOptions
 }
 

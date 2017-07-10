@@ -1,6 +1,8 @@
 const gulp = require('gulp')
 const Tools = require('..')
 
+const loadContext = require('../lib/libs/loadData').loadContext
+
 const config = {
   webpack: {
     hot: true,
@@ -9,6 +11,19 @@ const config = {
     providePlugin: {
       $: 'cash-dom',
     },
+  },
+  project: {
+    sass: {
+      includePaths: [
+        'test',
+      ],
+    },
+  },
+  template: {
+    globals: {
+      get_example: () => loadContext('example'),
+    },
+
   },
 }
 
