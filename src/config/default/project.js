@@ -1,7 +1,6 @@
 'use strict'
-import envs from '../../libs/envs'
 
-var options = {
+const options = {
   project_root: '{{ envs.root }}',
   static_root: '/static/',
   app_root: '{{ _.project_root }}/app',
@@ -13,8 +12,6 @@ var options = {
       scss: '{{ _.path.app.css }}',
       images: '{{ _.app_root }}/images/',
       js: '{{ _.app_root }}/scripts/',
-      template: '{{ _.template.root }}/',
-      template_context: '{{ _.template.context }}/',
       public: [
         '{{ _.app_root }}/public/',
       ],
@@ -25,44 +22,6 @@ var options = {
       img: '{{ _.dist_root }}/img',
       source_maps: '{{ _.dist_root }}/_maps/',
     },
-  },
-  template: {
-    root: '{{ _.app_root }}/templates/',
-    context: '{{ _.app_root }}/templates_context/',
-    dist: '{{ _.dist_root }}/templates/',
-  },
-  sprite: {
-    // a entry point
-    sprites: {
-      root: '{{ _.path.app.images }}/', // with append key name
-      imgRoot: '{{ _.static_root }}/img/',
-      spriteRoot: '{{ _.path.app.public[0] }}/img/',
-      suffix: 'icons-',
-    },
-  },
-  sass: {
-    includePaths: [
-      '{{ _.path.app.scss }}',
-      '{{ _.path.node_modules }}',
-    ],
-  },
-  'sass-image': {
-    images: {
-      root: '{{ _.path.app.public[0] }}/img/',
-      http_images_path: '{{ _.static_root }}/img/',
-      base64: false,
-      suffix: 'img-',
-    },
-  },
-  scss_lint: {
-    'config': '{{ envs.lib_root }}/.scss-lint.yml',
-    'maxBuffer': 2048 * 1024,
-  },
-  context: {
-    'STATIC_ROOT': '{{ project.static_root }}',
-  },
-  eslint: {
-    configFile: '{{ envs.lib_root }}/.eslintrc',
   },
 }
 

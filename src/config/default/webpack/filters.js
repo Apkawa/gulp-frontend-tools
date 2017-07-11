@@ -129,7 +129,7 @@ export function sassFilter (webpack_options, config) {
     return loader
   }
 
-  const context = _.get(config, 'project.context')
+  const context = _.get(config, 'context')
   if (_.isEmpty(context)) {
     return webpack_options
   }

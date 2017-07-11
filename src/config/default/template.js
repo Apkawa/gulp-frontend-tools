@@ -48,15 +48,18 @@ const extensions = {
 }
 
 const opts = {
-  path: '{{ project.template.root }}',
+  root: '{{ project.app_root }}/templates/',
+  context_root: '{{ project.app_root }}/templates_context/',
+  dist: '{{ project.dist_root }}/templates/',
+
   autoescape: true,
   throwOnUndefined: false,
   globals,
   filters,
   extensions,
   createEnv: function (template_options, global_config) {
-    const {path, ...extra} = template_options
-    const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path), extra)
+    const {root, ...extra} = template_options
+    const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(root), extra)
 
     _.each({...filters, ...template_options.filters || {}}, function (func, name) {
       env.addFilter(name, func)

@@ -20,16 +20,15 @@ export default function (gulp, config) {
 
   const template_options = config.template
 
-  const TEMPLATE_ROOT = config.project.template.root
-  const CONTEXT_ROOT = config.project.template.context
-  const TEMPLATE_DIST_ROOT = _.get(config, 'project.template.dist')
+  const TEMPLATE_ROOT = config.template.root
+  const CONTEXT_ROOT = config.template.context
+  const TEMPLATE_DIST_ROOT = _.get(config, 'template.dist')
 
   const getJsonData = function (file) {
     const parsed = path.parse(path.normalize(file.path))
     let dirname = _.slice(parsed.dir, path.normalize(TEMPLATE_ROOT).length).join('')
     dirname = dirname.replace('_jinja', '')
     const name = path.join(dirname, parsed.name)
-
     return loadData(name, CONTEXT_ROOT)
   }
 

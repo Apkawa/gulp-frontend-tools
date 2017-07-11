@@ -1,8 +1,5 @@
 'use strict'
 import _ from  'lodash'
-var _watch = require('gulp-watch')
-var batch = require('gulp-batch')
-import runSequence from 'run-sequence'
 
 export default function (gulp, config) {
   var browserSyncOptions = config.browserSync
@@ -31,7 +28,6 @@ export default function (gulp, config) {
     _.each(
       public_path,
       p => {
-        console.log(p, dist_root)
         watch(p + '**/*', ['public'], `${dist_root}**/*`)
       },
     )
