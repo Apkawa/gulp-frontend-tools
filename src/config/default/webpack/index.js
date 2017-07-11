@@ -45,6 +45,7 @@ const EXTRA_OPTIONS = {
   eslint: false,
   bundle_analyzer: envs.bundle_analyzer,
   providePlugin: {},
+  entry_root: "{{ project.path.app.js }}/entry/",
   entry_points: {},
   defines: {
     'STATIC_ROOT': '"{{ project.static_root }}"',
@@ -232,7 +233,6 @@ const WEBPACK_OPTIONS = {
     debug: 'empty',
     net: 'empty',
     child_process: 'empty',
-    readline: 'empty',
   },
 }
 
