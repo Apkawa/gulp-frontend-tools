@@ -1,7 +1,12 @@
 @import "variables";
+
 .test {
   .example {
     background-color: #000;
     background-image: url('#{$STATIC_ROOT}/test.png');
   }
+}
+
+h1 {
+  background-color: grey;
 }
