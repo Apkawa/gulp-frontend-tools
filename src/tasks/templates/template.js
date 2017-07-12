@@ -21,7 +21,7 @@ export default function (gulp, config) {
   const template_options = config.template
 
   const TEMPLATE_ROOT = config.template.root
-  const CONTEXT_ROOT = config.template.context
+  const CONTEXT_ROOT = config.template.context_root
   const TEMPLATE_DIST_ROOT = _.get(config, 'template.dist')
 
   const getJsonData = function (file) {

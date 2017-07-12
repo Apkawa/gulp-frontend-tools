@@ -43,7 +43,7 @@ export function loadData (name, context_root) {
 }
 
 export function loadContext (name, context_root) {
-  context_root = context_root || config.get('project.template.context')
+  context_root = context_root || config.get('template.context_root')
   console.log("CONFIG", context_root)
   return loadData(name, context_root)
 }

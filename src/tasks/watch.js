@@ -1,15 +1,22 @@
 'use strict'
+import path from 'path'
 import _ from  'lodash'
+import _runSequence  from 'run-sequence'
 
 export default function (gulp, config) {
-  var browserSyncOptions = config.browserSync
-  var browserSync = browserSyncOptions.browserSync
+  const runSequence = _runSequence.use(gulp)
+  const cwd = config.project.app_root
+  const browserSyncOptions = config.browserSync
+  const browserSync = browserSyncOptions.browserSync
 
   function watch (glob, tasks, reload_glob) {
     if (reload_glob) {
       tasks.push(() => browserSync.reload(reload_glob))
     }
-    return gulp.watch(glob, tasks)
+    const relativePath = path.relative(cwd, glob)
+    return gulp.watch(relativePath, {cwd}, () => {
+      runSequence(...tasks)
+    })
   }
 
   const {project: {dist_root, path: {app: APP_PATH}}} = config
@@ -22,9 +29,9 @@ export default function (gulp, config) {
   }
 
   gulp.task('watch', ['default'], function () {
-    watch(APP_PATH.css + '**/*[^_]', ['css'], '**/*.css')
-    watch(APP_PATH.template + '**/*[^_]', ['templates',])
-    watch(APP_PATH.template_context + '**/*[^_]', ['templates',])
+    watch(APP_PATH.css + '**/*', ['css'], '**/*.css')
+    watch(config.template.root + '**/*', ['templates',])
+    watch(config.template.context_root + '**/*', ['templates',])
     _.each(
       public_path,
       p => {
