@@ -43,9 +43,10 @@ const EXTRA_OPTIONS = {
   hot: true,
   gzip: false,
   eslint: false,
+  urlLimit: 100000,
   bundle_analyzer: envs.bundle_analyzer,
   providePlugin: {},
-  entry_root: "{{ project.path.app.js }}/entry/",
+  entry_root: '{{ project.path.app.js }}/entry/',
   entry_points: {},
   defines: {
     'STATIC_ROOT': '"{{ project.static_root }}"',
@@ -170,12 +171,11 @@ const WEBPACK_OPTIONS = {
         ],
 
       },
-
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
-          limit: 100000,
+          limit: '{{ _.urlLimit }}',
           mimetype: 'application/font-woff',
         },
       },
@@ -183,7 +183,7 @@ const WEBPACK_OPTIONS = {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
-          limit: 100000,
+          limit: '{{ _.urlLimit }}',
           mimetype: 'application/octet-stream',
         },
       },
@@ -195,16 +195,21 @@ const WEBPACK_OPTIONS = {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
-          limit: 100000,
+          limit: '{{ _.urlLimit }}',
           mimetype: 'image/svg+xml',
         },
       },
       {
         test: /\.(png|jpe?g|gif)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 100000,
-        },
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: '{{ _.urlLimit }}',
+              name: 'images/[name].[hash:7].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.(swig|html)$/,

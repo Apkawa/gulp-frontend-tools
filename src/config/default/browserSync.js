@@ -8,7 +8,6 @@ import webpack from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 
-
 const browserSync = create()
 
 function buildProxyList (proxyObject) {
@@ -31,7 +30,8 @@ function getWebpackMiddlewares (webpackConfig) {
         timeout: 100000,
       })
     }
-    //browserSync.reload();
+    // browserSync.reload('**/*.js')
+    // browserSync.reload('**/*.css')
   })
 
   return [
@@ -46,8 +46,10 @@ function getWebpackMiddlewares (webpackConfig) {
 function getBSConfig (config) {
   // options.webpack.extract_css = false;
   const webpack_options = config.webpack.getConfig(config)
-  const proxyOptions = _.get(config, 'browserSync.proxy', {})
-  const bsOptions = _.omit(config.browserSync, ['browserSync', 'getBSConfig', 'proxy'])
+  const {server, routes={}, middleware=[], proxy: proxyOptions} = config.browserSync
+
+  const bsOptions = _.omit(config.browserSync,
+    ['browserSync', 'getBSConfig', 'proxy', 'routes', 'middleware', 'server'])
   const project = config.project
 
   const compiledBsOptions = {
@@ -56,11 +58,15 @@ function getBSConfig (config) {
     browser: 'google-chrome',
     server: {
       baseDir: project.dist_root,
-      routes: {},
+      routes: {
+        ...routes,
+      },
       middleware: [
         ...buildProxyList(proxyOptions),
-        ...getWebpackMiddlewares(webpack_options)
+        ...getWebpackMiddlewares(webpack_options),
+        ...middleware,
       ],
+      ...server,
     },
     plugins: [],
     ...bsOptions

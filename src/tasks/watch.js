@@ -19,7 +19,7 @@ export default function (gulp, config) {
     })
   }
 
-  const {project: {dist_root, path: {app: APP_PATH}}} = config
+  const {project: {dist_root, path: {app: APP_PATH}}, watch: watchDirs} = config
   /*
    * Default & Watch tasks
    */
@@ -38,6 +38,10 @@ export default function (gulp, config) {
         watch(p + '**/*', ['public'], `${dist_root}**/*`)
       },
     )
+    _.each(watchDirs,
+      ([glob, tasks, reload_glob]) => {
+        watch(glob, tasks, reload_glob)
+      })
 
   })
 

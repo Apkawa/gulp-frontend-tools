@@ -5,6 +5,7 @@ import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import ImageminPlugin from 'imagemin-webpack-plugin'
 import envs from '../../../libs/envs'
 
 function getProjectWebpack (config) {
@@ -37,6 +38,10 @@ export function productionFilter (webpack_options, config) {
           drop_console: true,
           unsafe: true,
         },
+      }),
+      new ImageminPlugin({
+        disable: process.env.NODE_ENV !== 'production', // Disable during development
+        ...config.webpack.imageminPlugin
       }),
     ],
   }
