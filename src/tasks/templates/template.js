@@ -38,22 +38,23 @@ export default function (gulp, config) {
     }
     gutil.log(
       gutil.colors.cyan('Plumber') + gutil.colors.red(' found unhandled error:\n'),
-      err.toString(),
+      err.toString()
     )
+    // TODO write error to dest template
 
   }
 
   const env = template_options.createEnv(template_options, config)
   gulp.task('templates:jinja2', function () {
     return gulp.src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: TEMPLATE_ROOT})
-      .pipe(ignore.exclude(ignoreTemplate))
-      .pipe(debug({title: 'template'}))
-      .pipe(data(getJsonData))
-      .pipe(plumber(errorHandler))
-      .pipe(gulpNunjucks.compile({}, {env: env}))
-      .pipe(rename({extname: '.html'}))
-      .pipe(plumber.stop())
-      .pipe(gulp.dest(TEMPLATE_DIST_ROOT))
-      .pipe(browserSync.stream())
+               .pipe(ignore.exclude(ignoreTemplate))
+               .pipe(debug({title: 'template'}))
+               .pipe(data(getJsonData))
+               .pipe(plumber(errorHandler))
+               .pipe(gulpNunjucks.compile({}, {env: env}))
+               .pipe(rename({extname: '.html'}))
+               .pipe(plumber.stop())
+               .pipe(gulp.dest(TEMPLATE_DIST_ROOT))
+               .pipe(browserSync.stream())
   })
 }

@@ -1,5 +1,6 @@
 'use strict'
 import _ from 'lodash'
+import url from 'url'
 import humanize from 'humanize'
 import moment from 'moment'
 import { format as dateformat } from 'dateformatter'
@@ -22,29 +23,29 @@ const filters = {
     return humanize.numberFormat(input, 2, ',', ' ')
   },
   date: function (input, format) {
-    console.log("INPUT", input)
     var dt = moment(input)
     return dateformat(format, dt)
-  },
+  }
 
 }
 
 const globals = {
-  static: function (url) {
-    var static_root = '/static/'
-    return static_root + url
+  static: function (path) {
+    const config = require('..');
+    const static_root = config.get('project.static_root')
+    return url.resolve(static_root, path.replace(/^\/+/, ''))
   },
   url: function (url) {
     return url
   },
   _: function (str) {
     return str
-  },
+  }
 }
 
 const extensions = {
   'i18n': i18nExtension,
-  'jinja2': Jinja2Extension,
+  'jinja2': Jinja2Extension
 }
 
 const opts = {
@@ -65,7 +66,7 @@ const opts = {
       env.addFilter(name, func)
     })
 
-    _.each({...globals, ...template_options.globals || {},}, function (value, name) {
+    _.each({...globals, ...template_options.globals || {}}, function (value, name) {
       env.addGlobal(name, value)
     })
 
@@ -74,7 +75,7 @@ const opts = {
     })
 
     return env
-  },
+  }
 
 }
 

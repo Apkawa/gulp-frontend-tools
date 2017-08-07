@@ -7,20 +7,20 @@ export class i18nExtension {
   // http://jinja.pocoo.org/docs/2.9/templates/#i18n
   tags = ['trans']
   globals = {
-    get_current_language() {
+    get_current_language () {
       return 'ru'
     },
-    get_available_languages() {
+    get_available_languages () {
       return [['ru', 'Russian'], ['en', 'English']]
     },
-    get_language_info() {
+    get_language_info () {
       return {
         'name': 'Russian',
         'name_local': 'Русский',
         'code': 'ru',
-        'bidi': false,
+        'bidi': false
       }
-    },
+    }
   }
 
   constructor (env) {
@@ -41,7 +41,7 @@ export class i18nExtension {
         const attrName = arg.value
         arg = new nodes.Literal(arg.lineno, arg.colno, attrName)
         kwargs.addChild(
-          new nodes.Pair(arg.lineno, arg.colno, arg, parser.parseExpression()),
+          new nodes.Pair(arg.lineno, arg.colno, arg, parser.parseExpression())
         )
       } else {
         args.addChild(arg)
@@ -68,8 +68,9 @@ export class i18nExtension {
     // parse the body and possibly the error block, which is optional
     const body = parser.parseUntilBlocks('pluralize', 'endtrans')
     const blocks = [body]
-
+    let pluralizeArgs = null
     if (parser.skipSymbol('pluralize')) {
+      pluralizeArgs = this.parseSignature(parser, nodes, lexer)
       parser.skip(lexer.TOKEN_BLOCK_END)
       blocks.push(parser.parseUntilBlocks('endtrans'))
     }

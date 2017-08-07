@@ -22,7 +22,7 @@ export default class PageTwo extends React.Component {
         </ul>
         <img src={image} alt=""/>
         <div className={style.example_url_global}>
-          example_url_global
+          example_url_global 123
         </div>
 
         <h1 className={style2.head}>example "{style.head}" equal "{style2.head}"</h1>

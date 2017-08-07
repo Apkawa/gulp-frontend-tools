@@ -6,11 +6,14 @@ const loadContext = require('../lib/libs/loadData').loadContext
 const config = {
   webpack: {
     hot: true,
-    extract_css: true,
+    extract_css: false,
     bundle_analyzer: false,
     providePlugin: {
       $: 'cash-dom',
     },
+  },
+  postcss: {
+    autoprefixer: true,
   },
   sass: {
     includePaths: [

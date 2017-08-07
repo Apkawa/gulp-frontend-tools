@@ -35,7 +35,12 @@ const postcssLoader = {
   loader: 'postcss-loader',
   options: {
     sourceMap: true,
-    plugins: [],
+    config: {
+      ctx: {
+        env: gutil.env,
+        config: () => require('../../'),
+      },
+    },
   },
 }
 
@@ -50,6 +55,9 @@ const EXTRA_OPTIONS = {
   entry_points: {},
   defines: {
     'STATIC_ROOT': '"{{ project.static_root }}"',
+    'process.env': {
+      NODE_ENV: JSON.stringify(envs.is_production ? 'production' : 'developerment'),
+    },
   },
   publicPath: '{{ project.static_root }}js/',
   commonChunk: 'common.js',
@@ -91,13 +99,16 @@ const WEBPACK_OPTIONS = {
             resourceQuery: /\?module/,
             use: [
               styleLoader,
-              cssLoader(0, true),
+              cssLoader(1, true),
+              postcssLoader,
             ],
           },
           {
             use: [
               styleLoader,
-              cssLoader(0),
+              cssLoader(1),
+              postcssLoader,
+
             ],
           },
         ],
@@ -109,14 +120,16 @@ const WEBPACK_OPTIONS = {
             resourceQuery: /\?module/,
             use: [
               styleLoader,
-              cssLoader(1, true),
+              cssLoader(2, true),
+              postcssLoader,
               'less-loader',
             ],
           },
           {
             use: [
               styleLoader,
-              cssLoader(1),
+              cssLoader(2),
+              postcssLoader,
               'less-loader',
             ],
           },
@@ -129,7 +142,8 @@ const WEBPACK_OPTIONS = {
             resourceQuery: /\?module/,
             use: [
               styleLoader,
-              cssLoader(2, true),
+              cssLoader(3, true),
+              postcssLoader,
               'sass-loader',
               'import-glob-loader',
             ],
@@ -137,7 +151,8 @@ const WEBPACK_OPTIONS = {
           {
             use: [
               styleLoader,
-              cssLoader(2),
+              cssLoader(3),
+              postcssLoader,
               {
                 loader: 'sass-loader',
                 options: {
@@ -157,14 +172,16 @@ const WEBPACK_OPTIONS = {
             resourceQuery: /\?module/,
             use: [
               styleLoader,
-              cssLoader(1, true),
+              cssLoader(2, true),
+              postcssLoader,
               'stylus-loader',
             ],
           },
           {
             use: [
               styleLoader,
-              cssLoader(1),
+              cssLoader(2),
+              postcssLoader,
               'stylus-loader',
             ],
           },

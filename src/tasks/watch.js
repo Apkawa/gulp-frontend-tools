@@ -30,8 +30,8 @@ export default function (gulp, config) {
 
   gulp.task('watch', ['default'], function () {
     watch(APP_PATH.css + '**/*', ['css'], '**/*.css')
-    watch(config.template.root + '**/*', ['templates',])
-    watch(config.template.context_root + '**/*', ['templates',])
+    watch(config.template.root + '**/*', ['templates',], '**/*.html')
+    watch(config.template.context_root + '**/*', ['templates',], '**/*.html')
     _.each(
       public_path,
       p => {
