@@ -60,7 +60,7 @@ const opts = {
   extensions,
   createEnv: function (template_options, global_config) {
     const {root, ...extra} = template_options
-    const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(root), extra)
+    const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(root, {noCache: true}), extra)
 
     _.each({...filters, ...template_options.filters || {}}, function (func, name) {
       env.addFilter(name, func)

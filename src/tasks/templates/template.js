@@ -8,6 +8,7 @@ import debug from 'gulp-debug'
 import ignore from 'gulp-ignore'
 import plumber from 'gulp-plumber'
 import data from 'gulp-data'
+import nunjucks from 'nunjucks'
 import gulpNunjucks from 'gulp-nunjucks'
 import rename from 'gulp-rename'
 
@@ -43,18 +44,19 @@ export default function (gulp, config) {
     // TODO write error to dest template
 
   }
-
-  const env = template_options.createEnv(template_options, config)
+  const extra_opts =  {cache: false, noCache: true, settings: {views: {noCache: true}}}
+  const env = template_options.createEnv( {...template_options, ...extra_opts}, config)
   gulp.task('templates:jinja2', function () {
-    return gulp.src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: TEMPLATE_ROOT})
-               .pipe(ignore.exclude(ignoreTemplate))
-               .pipe(debug({title: 'template'}))
-               .pipe(data(getJsonData))
-               .pipe(plumber(errorHandler))
-               .pipe(gulpNunjucks.compile({}, {env: env}))
-               .pipe(rename({extname: '.html'}))
-               .pipe(plumber.stop())
-               .pipe(gulp.dest(TEMPLATE_DIST_ROOT))
-               .pipe(browserSync.stream())
+    return gulp
+      .src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: TEMPLATE_ROOT})
+      .pipe(ignore.exclude(ignoreTemplate))
+      .pipe(debug({title: 'template'}))
+      .pipe(data(getJsonData))
+      .pipe(plumber(errorHandler))
+      .pipe(gulpNunjucks.compile({}, {env: env}))
+      .pipe(rename({extname: '.html'}))
+      .pipe(plumber.stop())
+      .pipe(gulp.dest(TEMPLATE_DIST_ROOT))
+      .pipe(browserSync.stream())
   })
 }
