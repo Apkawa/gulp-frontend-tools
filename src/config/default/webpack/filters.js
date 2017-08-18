@@ -8,6 +8,9 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ImageminPlugin from 'imagemin-webpack-plugin'
 import envs from '../../../libs/envs'
 
+import MinifyPlugin from 'babili-webpack-plugin'
+import UglifyJSPlugin from 'uglifyjs-webpack-plugin'
+
 function getProjectWebpack (config) {
   return _.omit(_.get(config, 'webpack', {}), ['getConfig', 'config'])
 }
@@ -17,6 +20,48 @@ export function productionFilter (webpack_options, config) {
     return webpack_options
   }
   const project_webpack = getProjectWebpack(config)
+
+  let plugins = []
+  if (project_webpack.uglify) {
+    let opts = project_webpack.uglify
+    if (_.isBoolean(opts)) {
+      opts = {
+        sourceMap: false,
+        uglifyOptions: {
+
+          minimize: true,
+
+          beautify: false,
+          comments: false,
+          compress: {
+            warnings: false,
+            drop_console: true,
+            unsafe: true
+          },
+          output: {
+            ascii_only: true
+          }
+        }
+      }
+    }
+    plugins.push(new UglifyJSPlugin(
+      opts
+      )
+    )
+  }
+  if (project_webpack.babel_minify) {
+    let opts = project_webpack.babel_minify
+    if (_.isBoolean(opts)) {
+      opts = [
+        {},
+        {
+          comments: false
+        }
+      ]
+
+    }
+    plugins.push(new MinifyPlugin(...opts))
+  }
 
   return {
     ...webpack_options,
@@ -30,25 +75,11 @@ export function productionFilter (webpack_options, config) {
         debug: false
       }),
       new webpack.NoEmitOnErrorsPlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        minimize: true,
-        beautify: false,
-        comments: false,
-        sourceMap: false,
-        compress: {
-          warnings: false,
-          drop_console: true,
-          unsafe: true
-        },
-        output: {
-          ascii_only: true
-        },
-        ...project_webpack.uglify
-      }),
       new ImageminPlugin({
         disable: process.env.NODE_ENV !== 'production', // Disable during development
         ...config.webpack.imageminPlugin
-      })
+      }),
+      ...plugins
     ]
   }
 }

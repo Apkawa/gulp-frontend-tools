@@ -20,15 +20,15 @@ const cssLoader = (importLoaders = 0, modules = undefined) => ({
       sourceMap: true,
       localIdentName: envs.is_production
         ? '[hash:base64]'
-        : '[path]__[name]__[local]--[hash:base64:5]',
-    },
+        : '[path]__[name]__[local]--[hash:base64:5]'
+    }
   }
 )
 const styleLoader = {
   loader: 'style-loader',
   options: {
-    sourceMap: true,
-  },
+    sourceMap: true
+  }
 }
 
 const postcssLoader = {
@@ -38,16 +38,18 @@ const postcssLoader = {
     config: {
       ctx: {
         env: gutil.env,
-        config: () => require('../../'),
-      },
-    },
-  },
+        config: () => require('../../')
+      }
+    }
+  }
 }
 
 const EXTRA_OPTIONS = {
   hot: true,
   gzip: false,
   eslint: false,
+  uglify: true,
+  babel_minify: false,
   urlLimit: 100000,
   bundle_analyzer: envs.bundle_analyzer,
   providePlugin: {},
@@ -56,17 +58,17 @@ const EXTRA_OPTIONS = {
   defines: {
     'STATIC_ROOT': '"{{ project.static_root }}"',
     'process.env': {
-      NODE_ENV: JSON.stringify(envs.is_production ? 'production' : 'developerment'),
-    },
+      NODE_ENV: JSON.stringify(envs.is_production ? 'production' : 'developerment')
+    }
   },
   publicPath: '{{ project.static_root }}js/',
   commonChunk: 'common.js',
   extract_css: {
     filename: 'common.css',
     options: {
-      allChunks: true,
-    },
-  },
+      allChunks: true
+    }
+  }
 }
 
 const WEBPACK_OPTIONS = {
@@ -74,23 +76,30 @@ const WEBPACK_OPTIONS = {
   watch: false,
   devtool: 'cheap-module-eval-source-map',
   entry: {},
+  stats: {
+    colors: true,
+    modules: true,
+    reasons: true,
+    errorDetails: true
+  },
+
   output: {
     path: '{{ project.path.dist.js }}',
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
     publicPath: '{{ webpack.publicPath }}',
-    sourceMapFilename: '../_maps/[file].map',
+    sourceMapFilename: '../_maps/[file].map'
   },
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: [/node_modules/, /vendors/],
-        loader: 'babel-loader',
+        loader: 'babel-loader'
       },
       {
         test: /\.vue$/,
-        use: ['vue-loader'],
+        use: ['vue-loader']
       },
       {
         test: /\.css$/,
@@ -100,18 +109,18 @@ const WEBPACK_OPTIONS = {
             use: [
               styleLoader,
               cssLoader(1, true),
-              postcssLoader,
-            ],
+              postcssLoader
+            ]
           },
           {
             use: [
               styleLoader,
               cssLoader(1),
-              postcssLoader,
+              postcssLoader
 
-            ],
-          },
-        ],
+            ]
+          }
+        ]
       },
       {
         test: /\.less$/,
@@ -122,18 +131,18 @@ const WEBPACK_OPTIONS = {
               styleLoader,
               cssLoader(2, true),
               postcssLoader,
-              'less-loader',
-            ],
+              'less-loader'
+            ]
           },
           {
             use: [
               styleLoader,
               cssLoader(2),
               postcssLoader,
-              'less-loader',
-            ],
-          },
-        ],
+              'less-loader'
+            ]
+          }
+        ]
       },
       {
         test: /\.(scss|sass)$/,
@@ -145,8 +154,8 @@ const WEBPACK_OPTIONS = {
               cssLoader(3, true),
               postcssLoader,
               'sass-loader',
-              'import-glob-loader',
-            ],
+              'import-glob-loader'
+            ]
           },
           {
             use: [
@@ -156,14 +165,14 @@ const WEBPACK_OPTIONS = {
               {
                 loader: 'sass-loader',
                 options: {
-                  sourceMap: true,
-                },
+                  sourceMap: true
+                }
               },
-              'import-glob-loader',
-            ],
+              'import-glob-loader'
+            ]
 
-          },
-        ],
+          }
+        ]
       },
       {
         test: /\.styl$/,
@@ -174,18 +183,18 @@ const WEBPACK_OPTIONS = {
               styleLoader,
               cssLoader(2, true),
               postcssLoader,
-              'stylus-loader',
-            ],
+              'stylus-loader'
+            ]
           },
           {
             use: [
               styleLoader,
               cssLoader(2),
               postcssLoader,
-              'stylus-loader',
-            ],
-          },
-        ],
+              'stylus-loader'
+            ]
+          }
+        ]
 
       },
       {
@@ -193,28 +202,28 @@ const WEBPACK_OPTIONS = {
         loader: 'url-loader',
         options: {
           limit: '{{ _.urlLimit }}',
-          mimetype: 'application/font-woff',
-        },
+          mimetype: 'application/font-woff'
+        }
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
           limit: '{{ _.urlLimit }}',
-          mimetype: 'application/octet-stream',
-        },
+          mimetype: 'application/octet-stream'
+        }
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
+        loader: 'file-loader'
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
           limit: '{{ _.urlLimit }}',
-          mimetype: 'image/svg+xml',
-        },
+          mimetype: 'image/svg+xml'
+        }
       },
       {
         test: /\.(png|jpe?g|gif)(\?v=\d+\.\d+\.\d+)?$/,
@@ -223,30 +232,30 @@ const WEBPACK_OPTIONS = {
             loader: 'url-loader',
             options: {
               limit: '{{ _.urlLimit }}',
-              name: 'images/[name].[hash:7].[ext]',
-            },
-          },
-        ],
+              name: 'images/[name].[hash:7].[ext]'
+            }
+          }
+        ]
       },
       {
         test: /\.(swig|html)$/,
-        loader: 'html-loader',
-      },
+        loader: 'html-loader'
+      }
     ],
-    noParse: /\.min\.js/,
+    noParse: /\.min\.js/
   },
   resolve: {
     modules: [
       '{{ project.path.app.js }}',
       '{{ project.app_root }}',
       '{{ project.project_root }}',
-      '{{ project.path.node_modules }}',
+      '{{ project.path.node_modules }}'
     ],
     extensions: ['.js', '.jsx'],
-    alias: {},
+    alias: {}
   },
   plugins: [
-    new StringReplacePlugin(),
+    new StringReplacePlugin()
   ],
   node: {
     fs: 'empty',
@@ -254,8 +263,8 @@ const WEBPACK_OPTIONS = {
     directory: 'empty',
     debug: 'empty',
     net: 'empty',
-    child_process: 'empty',
-  },
+    child_process: 'empty'
+  }
 }
 
 let __COMPILED
@@ -282,5 +291,5 @@ function getConfig (config) {
 export default {
   getConfig,
   ...EXTRA_OPTIONS,
-  config: WEBPACK_OPTIONS,
+  config: WEBPACK_OPTIONS
 }
