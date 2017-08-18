@@ -27,7 +27,7 @@ export function productionFilter (webpack_options, config) {
       ...webpack_options.plugins,
       new webpack.LoaderOptionsPlugin({
         minimize: true,
-        debug: false,
+        debug: false
       }),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.optimize.UglifyJsPlugin({
@@ -38,7 +38,9 @@ export function productionFilter (webpack_options, config) {
         compress: {
           warnings: false,
           drop_console: true,
-          unsafe: true,
+          unsafe: true
+        },
+        output: {
           ascii_only: true
         },
         ...project_webpack.uglify
@@ -46,8 +48,8 @@ export function productionFilter (webpack_options, config) {
       new ImageminPlugin({
         disable: process.env.NODE_ENV !== 'production', // Disable during development
         ...config.webpack.imageminPlugin
-      }),
-    ],
+      })
+    ]
   }
 }
 
@@ -55,16 +57,16 @@ export function hotFilter (webpack_options, config) {
   const project_webpack = getProjectWebpack(config)
   if (project_webpack.hot && envs.debug) {
     webpack_options.devServer = {
-      hot: true,
+      hot: true
     }
     webpack_options.entry = _.fromPairs(_.map(webpack_options.entry,
       (f, n) => [
         n, [
           f,
           'webpack/hot/dev-server',
-          'webpack-hot-middleware/client',
-        ]],
-      ),
+          'webpack-hot-middleware/client'
+        ]]
+      )
     )
     webpack_options.plugins.push(new webpack.HotModuleReplacementPlugin())
   }
@@ -75,7 +77,7 @@ export function extractCss (webpack_options, config) {
   const modify_rules = (loaders) => {
     const opts = {
       fallback: loaders[0],
-      use: _.map(_.slice(loaders, 1), (l) => l),
+      use: _.map(_.slice(loaders, 1), (l) => l)
     }
     return ExtractTextPlugin.extract(opts)
   }
@@ -89,16 +91,18 @@ export function extractCss (webpack_options, config) {
   webpack_options.module.rules = _.map(webpack_options.module.rules, (loader_rule) => {
     const {test, use: loaders, oneOf, rules} = loader_rule
 
-    if (test.test('.css') || test.test('.less') || test.test('.scss') || test.test('.sass') || test.test('.styl')) {
-      const [key, subRules] = _.filter(_.map({oneOf, rules}, (v, k) => v ? [k, v] : v))[0] || [undefined, undefined]
+    if (test.test('.css') || test.test('.less') || test.test('.scss') || test.test('.sass') ||
+      test.test('.styl')) {
+      const [key, subRules] = _.filter(_.map({oneOf, rules}, (v, k) => v ? [k, v] : v))[0] ||
+      [undefined, undefined]
       if (key) {
         return {
           test,
-          [key]: _.map(subRules, ({use, ..._l}) => ({use: modify_rules(use), ..._l})),
+          [key]: _.map(subRules, ({use, ..._l}) => ({use: modify_rules(use), ..._l}))
         }
       }
       return {
-        test, use: modify_rules(loaders),
+        test, use: modify_rules(loaders)
       }
     }
     return loader_rule
@@ -115,11 +119,12 @@ export function extractCss (webpack_options, config) {
 export function definesFilter (webpack_options, config) {
   const defines = _.get(getProjectWebpack(config), 'defines', {})
   webpack_options.plugins.unshift(
-    new webpack.DefinePlugin(defines),
+    new webpack.DefinePlugin(defines)
   )
   return webpack_options
 
 }
+
 export function sassFilter (webpack_options, config) {
   const updateLoaders = (loader) => {
     if (_.isArray(loader)) {
@@ -128,7 +133,7 @@ export function sassFilter (webpack_options, config) {
     if (_.isString(loader) && loader === 'sass-loader') {
       loader = {
         loader,
-        options: {},
+        options: {}
       }
     }
     if (loader.loader === 'sass-loader') {
@@ -148,20 +153,21 @@ export function sassFilter (webpack_options, config) {
       return o
     }
 
-    const [key, _rules] = _.filter(_.map({oneOf, rules}, (v, k) => v ? [k, v] : v))[0] || [undefined, undefined]
+    const [key, _rules] = _.filter(_.map({oneOf, rules}, (v, k) => v ? [k, v] : v))[0] ||
+    [undefined, undefined]
     console.log(key, rules)
     if (key) {
       return {
         test,
         ..._o,
-        [key]: _.map(_rules, ({use, ...r}) => ({use: updateLoaders(use), ...r})),
+        [key]: _.map(_rules, ({use, ...r}) => ({use: updateLoaders(use), ...r}))
       }
     }
     console.log(_o)
     return {
       test,
       ..._o,
-      use: updateLoaders(use),
+      use: updateLoaders(use)
     }
   })
   return webpack_options
@@ -210,17 +216,17 @@ export function commonChunkFilter (webpack_options, config) {
     config = {
       name: path.basename(config, '.js'),
       filename: config,
-      minChunks: 2,
+      minChunks: 2
     }
   }
 
   webpack_options.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin(config),
+    new webpack.optimize.CommonsChunkPlugin(config)
   )
   return webpack_options
 }
 
-export default  [
+export default [
   productionFilter,
   hotFilter,
   definesFilter,
@@ -229,5 +235,5 @@ export default  [
   lodashFilter,
   commonChunkFilter,
   extractCss,
-  bundleAnalyzerFilter,
+  bundleAnalyzerFilter
 ]
