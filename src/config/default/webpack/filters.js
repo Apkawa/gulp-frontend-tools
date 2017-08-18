@@ -16,6 +16,8 @@ export function productionFilter (webpack_options, config) {
   if (!envs.is_production) {
     return webpack_options
   }
+  const project_webpack = getProjectWebpack(config)
+
   return {
     ...webpack_options,
     cache: false,
@@ -37,7 +39,9 @@ export function productionFilter (webpack_options, config) {
           warnings: false,
           drop_console: true,
           unsafe: true,
+          ascii_only: true
         },
+        ...project_webpack.uglify
       }),
       new ImageminPlugin({
         disable: process.env.NODE_ENV !== 'production', // Disable during development

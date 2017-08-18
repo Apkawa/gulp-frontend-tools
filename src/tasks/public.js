@@ -12,7 +12,7 @@ import sourcemaps from 'gulp-sourcemaps'
 
 import debug from 'gulp-debug'
 
-const IMG_GLOB = '**/*.{png,jp?g,svg,gif}'
+const IMG_GLOB = '**/*.{png,jp?g,gif}'
 const CSS_GLOB = '**/*.css'
 const JS_GLOB = '**/*.js'
 
