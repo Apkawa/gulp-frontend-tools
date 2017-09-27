@@ -1,6 +1,6 @@
 {
   "name": "gulp-frontend-tools",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "build": "yarn run clean && babel --out-dir lib src",
     "watch": "yarn build && babel --watch --out-dir lib src",
     "lint": "eslint src",
-    "examples": "cd examples; yarn build",
-    "examples:serve": "cd examples; yarn serve"
+    "examples": "yarn build && cd examples; yarn build",
+    "examples:serve": "concurrently 'yarn watch' 'cd examples; yarn serve'"
   },
   "author": "apkawa <apkawa@gmail.com>",
   "license": "MIT",
@@ -124,6 +124,7 @@
     "style-loader": "^0.18.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
+    "svgo": "^0.7.2",
     "syntax-error": "^1.3.0",
     "through-gulp": "^0.5.0",
     "through2": "^2.0.3",
@@ -143,6 +144,7 @@
     "webpack-stream": "^4.0.0"
   },
   "devDependencies": {
+    "concurrently": "^3.5.0",
     "image-webpack-loader": "^3.3.1"
   }
 }

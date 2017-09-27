@@ -93,6 +93,11 @@ const WEBPACK_OPTIONS = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        use: ["source-map-loader"],
+        enforce: "pre"
+      },
+      {
         test: /\.jsx?$/,
         exclude: [/node_modules/, /vendors/],
         loader: 'babel-loader'
