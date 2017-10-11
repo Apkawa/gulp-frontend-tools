@@ -1,6 +1,6 @@
 {
   "name": "gulp-frontend-tools",
-  "version": "0.2.24",
+  "version": "0.2.25",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -142,10 +142,10 @@
     "webpack-dev-middleware": "^1.12.0",
     "webpack-dev-server": "^2.7.1",
     "webpack-hot-middleware": "^2.18.2",
+    "image-webpack-loader": "^3.3.1",
     "webpack-stream": "^4.0.0"
   },
   "devDependencies": {
-    "concurrently": "^3.5.0",
-    "image-webpack-loader": "^3.3.1"
+    "concurrently": "^3.5.0"
   }
 }
