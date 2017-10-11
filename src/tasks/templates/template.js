@@ -42,10 +42,29 @@ export default function (gulp, config) {
       err.toString()
     )
     // TODO write error to dest template
-
+    const errorHtml = `
+    <html>
+    <head>${err.name}</head>
+    <body>
+        <h1>${err.name}</h1>
+        <p>${err.message}</p>
+        <p>${err.fileName}</p>
+        <pre>${err.stack}</pre>
+    </body>
+    </html>
+    `
+    const file = new gutil.File({
+      path: err.fileName,
+      base: path.dirname(err.fileName),
+      root: __dirname,
+      contents: new Buffer(errorHtml)
+    })
+    this.push(file)
+    return true
   }
-  const extra_opts =  {cache: false, noCache: true, settings: {views: {noCache: true}}}
-  const env = template_options.createEnv( {...template_options, ...extra_opts}, config)
+
+  const extra_opts = {cache: false, noCache: true, settings: {views: {noCache: true}}}
+  const env = template_options.createEnv({...template_options, ...extra_opts}, config)
   gulp.task('templates:jinja2', function () {
     return gulp
       .src(TEMPLATE_ROOT + '/**/*.{jinja2,html,j2}', {base: TEMPLATE_ROOT})
