@@ -25,5 +25,5 @@ script:
   - cd examples
   - rm -rf node_modules
   - yarn
-  - gulp build
-  - gulp build --type=production
+  - gulp build --gulpfile=gulpfile-travis.js
+  - gulp build --gulpfile=gulpfile-travis.js --type=production
