@@ -21,10 +21,9 @@ before_script:
   - gulp -v
 script:
   - yarn run build
-
   - rm -rf node_modules
-
   - cd examples
+  - rm -rf node_modules
   - yarn
   - gulp build
   - gulp build --type=production
