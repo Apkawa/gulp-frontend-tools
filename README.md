@@ -1,4 +1,4 @@
-![!gulp-frontend-tools](https://david-dm.org/apkawa/gulp-frontend-tools.svg)
+[![!gulp-frontend-tools](https://david-dm.org/apkawa/gulp-frontend-tools.svg)](https://david-dm.org/apkawa/gulp-frontend-tools)
 [![Build Status](https://travis-ci.org/Apkawa/gulp-frontend-tools.svg?branch=master)](https://travis-ci.org/Apkawa/gulp-frontend-tools)
 
 # Структура проектов
