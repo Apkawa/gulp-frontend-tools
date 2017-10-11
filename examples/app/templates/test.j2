@@ -3,13 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ static('css/example.css')}}">
     <script src="{{ static('js/commons.js')}}"></script>
     <script src="{{ static('js/example.js')}}"></script>
 </head>
 <body>
 
-
-<h1>{{ title }}</h1>
+<h1>{{ title }} 2</h1>
 {{ content }} annmadss
+{{ get_example().example_string }}
+{{ get_example().example_date|date("Y m d") }}
+{{  }}
+
+{% trans %}
+Example two
+{% endtrans %}
+{% trans count=123 %}
+Example pluralize {{ count }}
+{% pluralize count %}
+Examples {{ count }}
+{% endtrans %}
+
+{% trans v=content %}
+Example with content v={{ v}}
+{% endtrans %}
 </body>
 </html>

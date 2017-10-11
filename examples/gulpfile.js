@@ -1,14 +1,58 @@
-var gulp = require('gulp');
-var initGulpTasks = require('gulp-frontend-tools');
+const gulp = require('gulp')
+const Tools = require('..')
 
-var config = {
-    project: {
-        webpack: {
-            defines: {
-                EXAMPLE_DEFINE: "'{{ envs.example_define|default(\"no_defined\") }}'",
-            }
-        }
+const loadContext = require('../lib/libs/loadData').loadContext
 
-    }
+const config = {
+  webpack: {
+    hot: true,
+    extract_css: false,
+    bundle_analyzer: false,
+    providePlugin: {
+      $: 'cash-dom',
+    },
+  },
+  postcss: {
+    autoprefixer: true,
+  },
+  sass: {
+    includePaths: [
+      'test',
+    ],
+  },
+  template: {
+    globals: {
+      get_example: () => loadContext('example'),
+    },
+  },
+  sprite: {
+    example_sprite: {
+      root: '{{ project.path.app.images }}/sprites/',
+      imgRoot: '{{ project.static_root }}/img/',
+      imgPath: '{{ project.path.app.public[0] }}/images/_example_sprite.png',
+      stylePath: '{{ project.path.app.scss }}/mixins/_example_sprite.scss',
+      suffix: 'icons-',
+    },
+  },
+  'sass-image': {
+    example_images: {
+      root: '{{ project.path.app.public[0] }}/images/',
+      http_images_path: '{{ project.static_root }}/images/',
+      includeBase64: false,
+      suffix: 'img-',
+    },
+  },
+
 }
-initGulpTasks(gulp, config, __dirname);
+
+Tools(gulp, config)
+  .task('example', (gulp, config) => {
+    gulp.task('example', () => {
+      console.log(config.example)
+    })
+  })
+  .configHook((config) => {
+    config.example = 'EXAMPLE nya!'
+    return config
+  })
+  .run()

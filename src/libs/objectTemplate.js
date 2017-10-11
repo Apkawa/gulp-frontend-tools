@@ -16,7 +16,6 @@ function objectTemplate(obj, context) {
         if (_.isString(value)) {
             try {
                 var rendered = tpl.renderString(value, context);
-
                 // Обновляем контекст
                 var paths = [this.path.join('.'), "_." + _.slice(this.path, 1).join('.')]
                 _.each(paths, function (v) {

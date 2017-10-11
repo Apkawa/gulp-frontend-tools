@@ -1,5 +1,5 @@
 'use strict';
-import loadData from "../../libs/load_data";
+import loadData from "../../libs/loadData";
 import ignore from "gulp-ignore";
 import fs from "fs";
 import path from "path";
@@ -27,10 +27,8 @@ function add_context(context_root) {
 }
 
 export default function (gulp, config) {
-    const TEMPLATE_ROOT = config.project.template.root;
-    const APP_ROOT = config.project.app_root;
-
-    const CONTEXT_ROOT = config.project.template.context;
+    const TEMPLATE_ROOT = config.template.root;
+    const CONTEXT_ROOT = config.template.context;
 
 
     gulp.task('templates:add_context', function () {

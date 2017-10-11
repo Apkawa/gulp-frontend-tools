@@ -1,4 +1,6 @@
-https://github.com/luqin/react-component-tools
+![!gulp-frontend-tools](https://david-dm.org/apkawa/gulp-frontend-tools.svg)
+[![Build Status](https://travis-ci.org/Apkawa/gulp-frontend-tools.svg?branch=master)](https://travis-ci.org/Apkawa/gulp-frontend-tools)
+
 # Структура проектов
 
 * { project_name }
