@@ -1,29 +1,49 @@
+const path = require('path')
 const gulp = require('gulp')
 const Tools = require('..')
 
 const loadContext = require('../lib/libs/loadData').loadContext
 
 const config = {
+  project: {
+    path: {
+      app: {
+        public: [
+          '{{ _.app_root }}/public/',
+          {
+            root: 'fonts/weather-icons/', files: [
+            path.resolve('node_modules/weather-icons/font/')
+          ]
+          },
+          {
+            root: 'css/', files: [
+            path.resolve('node_modules/weather-icons/css/weather-icons.css')
+          ]
+          }
+        ]
+      }
+    }
+  },
   webpack: {
     hot: true,
     extract_css: false,
     bundle_analyzer: false,
     providePlugin: {
-      $: 'cash-dom',
-    },
+      $: 'cash-dom'
+    }
   },
   postcss: {
-    autoprefixer: true,
+    autoprefixer: true
   },
   sass: {
     includePaths: [
-      'test',
-    ],
+      'test'
+    ]
   },
   template: {
     globals: {
-      get_example: () => loadContext('example'),
-    },
+      get_example: () => loadContext('example')
+    }
   },
   sprite: {
     example_sprite: {
@@ -31,17 +51,17 @@ const config = {
       imgRoot: '{{ project.static_root }}/img/',
       imgPath: '{{ project.path.app.public[0] }}/images/_example_sprite.png',
       stylePath: '{{ project.path.app.scss }}/mixins/_example_sprite.scss',
-      suffix: 'icons-',
-    },
+      suffix: 'icons-'
+    }
   },
   'sass-image': {
     example_images: {
       root: '{{ project.path.app.public[0] }}/images/',
       http_images_path: '{{ project.static_root }}/images/',
       includeBase64: false,
-      suffix: 'img-',
-    },
-  },
+      suffix: 'img-'
+    }
+  }
 
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "gulp-frontend-tools",
-  "version": "0.2.25",
+  "version": "0.2.26",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

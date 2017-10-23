@@ -1,4 +1,5 @@
 'use strict'
+import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
 import changed from 'gulp-changed'
@@ -15,7 +16,6 @@ import debug from 'gulp-debug'
 const IMG_GLOB = '**/*.{png,jp?g,gif}'
 const CSS_GLOB = '**/*.css'
 const JS_GLOB = '**/*.js'
-
 
 export default function (gulp, config) {
   //var cssStream = require('./styles/sass');
@@ -60,19 +60,44 @@ export default function (gulp, config) {
   }
 
   gulp.task('public', function () {
-    let streams = _.map(PUBLIC_FILES, (public_root) => {
-      const files_glob = path.join(public_root, '/**/*')
-      let stream = gulp
-        .src(files_glob, {base: public_root})
-        .pipe(changed(DIST_ROOT))
+    let streams = _.map(PUBLIC_FILES, (publicRoot) => {
+      let filesGlob
+      if (_.isString(publicRoot)) {
+        filesGlob = [
+          {
+            base: publicRoot,
+            glob: path.join(publicRoot, '/**/*'),
+            dist: DIST_ROOT
+          }
+        ]
+      }
+      if (_.isPlainObject(publicRoot)) {
+        let {root, files} = publicRoot
+        filesGlob = _.map(files,
+          f => {
+            const _file = path.resolve(publicRoot, f)
+            const isDir = fs.lstatSync(_file).isDirectory()
+            return {
+              glob: path.resolve(_file, isDir ? '**/*' : ''),
+              base: isDir ? _file : path.dirname(_file),
+              dist: path.resolve(DIST_ROOT, root)
+            }
+          })
+      }
+      const subStreams = _.map(filesGlob, ({base, glob, dist}) => {
+        let stream = gulp
+          .src(glob, {base})
+          .pipe(changed(dist))
 
-      stream = imagesStream(stream)
-      stream = jsStream(stream)
-      // TODO cssStream
-      // stream = cssStream(stream);
+        stream = imagesStream(stream)
+        stream = jsStream(stream)
+        // TODO cssStream
+        // stream = cssStream(stream);
+        return stream
+          .pipe(gulp.dest(dist))
+      })
 
-      return stream
-        .pipe(gulp.dest(DIST_ROOT))
+      return merge(subStreams)
     })
     return merge(streams)
   })

@@ -1,10 +1,11 @@
-[![!gulp-frontend-tools](https://david-dm.org/apkawa/gulp-frontend-tools.svg)](https://david-dm.org/apkawa/gulp-frontend-tools)
+[![gulp-frontend-tools](https://david-dm.org/apkawa/gulp-frontend-tools.svg)](https://david-dm.org/apkawa/gulp-frontend-tools)
+
 [![Build Status](https://travis-ci.org/Apkawa/gulp-frontend-tools.svg?branch=master)](https://travis-ci.org/Apkawa/gulp-frontend-tools)
 
 # Структура проектов
 
 * { project_name }
-    * app - исходникrun-sequenceи
+    * app - исходники
         * images
             * sprites - спрайты
         * public - файлы которые нужно копировать в dist. 

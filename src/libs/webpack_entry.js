@@ -1,15 +1,15 @@
-'use strict'
-
-import path from 'path'
-import _ from 'lodash'
 import collect_filenames from './collect_filenames'
 
 export default function getWebpackEntry (config) {
-  const webpack_options = config.webpack
-  const ENTRY_ROOT = webpack_options.entry_root
-  const entryPoints = collect_filenames(ENTRY_ROOT, '**/*.js?(x)')
+  const webpackOptions = config.webpack
+  const {
+    entry_root: entryRoot,
+    entry_points: extraEntryPoints
+  } = webpackOptions
+  const entryPoints = collect_filenames(entryRoot, '**/*.js?(x)')
   return {
     ...entryPoints,
-    ...webpack_options.entry
+    ...webpackOptions.entry,
+    ...extraEntryPoints
   }
 }
