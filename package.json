@@ -1,6 +1,6 @@
 {
   "name": "gulp-frontend-tools",
-  "version": "0.2.26",
+  "version": "0.2.27",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -92,6 +92,8 @@
     "gulp.spritesmith": "^6.5.1",
     "html-loader": "^0.5.1",
     "humanize": "0.0.9",
+    "image-webpack-loader": "^3.3.1",
+    "imagemin-jpegoptim": "^5.1.0",
     "imagemin-webpack-plugin": "^1.5.0-beta.0",
     "import-glob-loader": "^1.1.0",
     "imports-loader": "^0.7.1",
@@ -142,7 +144,6 @@
     "webpack-dev-middleware": "^1.12.0",
     "webpack-dev-server": "^2.7.1",
     "webpack-hot-middleware": "^2.18.2",
-    "image-webpack-loader": "^3.3.1",
     "webpack-stream": "^4.0.0"
   },
   "devDependencies": {

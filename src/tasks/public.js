@@ -4,7 +4,6 @@ import path from 'path'
 import _ from 'lodash'
 import changed from 'gulp-changed'
 import gulpif from 'gulp-if'
-import imagemin from 'gulp-imagemin'
 import uglify from 'gulp-uglify'
 import size from 'gulp-size'
 import merge from 'merge-stream'
@@ -13,7 +12,10 @@ import sourcemaps from 'gulp-sourcemaps'
 
 import debug from 'gulp-debug'
 
-const IMG_GLOB = '**/*.{png,jp?g,gif}'
+import imagemin from 'gulp-imagemin'
+import imageminJpegoptim from 'imagemin-jpegoptim'
+
+const IMG_GLOB = '**/*.{png,jpg,jpeg,gif}'
 const CSS_GLOB = '**/*.css'
 const JS_GLOB = '**/*.js'
 
@@ -27,11 +29,20 @@ export default function (gulp, config) {
 
   const isProduction = config.envs.is_production
 
-  function imagesStream (stream) {
+  function imagesStream (stream, imageminOptions) {
     const imgFilter = filter(IMG_GLOB, {restore: true})
+    imageminOptions = {
+      plugins: [
+        imageminJpegoptim({progressive: true, max: 85}),
+        imagemin.gifsicle(),
+        imagemin.optipng(),
+        imagemin.svgo()
+      ],
+      verbose: true
+    }
     return stream
       .pipe(imgFilter)
-      .pipe(gulpif(isProduction, imagemin({verbose: true})))
+      .pipe(gulpif(isProduction, imagemin(imageminOptions.plugins, imageminOptions)))
       .pipe(size({showFiles: true, gzip: true}))
       .pipe(imgFilter.restore)
   }
@@ -72,7 +83,7 @@ export default function (gulp, config) {
         ]
       }
       if (_.isPlainObject(publicRoot)) {
-        let {root, files} = publicRoot
+        let {root, files, imagemin} = publicRoot
         filesGlob = _.map(files,
           f => {
             const _file = path.resolve(publicRoot, f)
@@ -89,7 +100,7 @@ export default function (gulp, config) {
           .src(glob, {base})
           .pipe(changed(dist))
 
-        stream = imagesStream(stream)
+        stream = imagesStream(stream, imagemin)
         stream = jsStream(stream)
         // TODO cssStream
         // stream = cssStream(stream);
