@@ -30,6 +30,18 @@ const config = {
     bundle_analyzer: false,
     providePlugin: {
       $: 'cash-dom'
+    },
+    config: {
+      resolve: {
+        modules: [
+          '{{ project.path.app.js }}',
+          '{{ envs.root }}/../common/js/',
+          '{{ envs.root }}/../common/js/libs',
+          '{{ project.app_root }}',
+          '{{ project.project_root }}/../',
+          '{{ envs.root }}'
+        ]
+      }
     }
   },
   postcss: {

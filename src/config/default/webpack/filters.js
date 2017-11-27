@@ -22,13 +22,14 @@ export function productionFilter (webpack_options, config) {
   const project_webpack = getProjectWebpack(config)
 
   let plugins = []
+
   if (project_webpack.uglify) {
     let opts = project_webpack.uglify
     if (_.isBoolean(opts)) {
       opts = {
-        sourceMap: false,
+        sourceMap: true,
         uglifyOptions: {
-
+          ecma: 8,
           minimize: true,
 
           beautify: false,
@@ -44,10 +45,7 @@ export function productionFilter (webpack_options, config) {
         }
       }
     }
-    plugins.push(new UglifyJSPlugin(
-      opts
-      )
-    )
+    plugins.push(new UglifyJSPlugin(opts))
   }
   if (project_webpack.babel_minify) {
     let opts = project_webpack.babel_minify
@@ -67,7 +65,7 @@ export function productionFilter (webpack_options, config) {
     ...webpack_options,
     cache: false,
     watch: false,
-    devtool: false,
+    devtool: 'source-map',
     plugins: [
       ...webpack_options.plugins,
       new webpack.LoaderOptionsPlugin({
@@ -194,7 +192,6 @@ export function sassFilter (webpack_options, config) {
         [key]: _.map(_rules, ({use, ...r}) => ({use: updateLoaders(use), ...r}))
       }
     }
-    console.log(_o)
     return {
       test,
       ..._o,

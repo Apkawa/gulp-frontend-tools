@@ -88,7 +88,7 @@ const WEBPACK_OPTIONS = {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
     publicPath: '{{ webpack.publicPath }}',
-    sourceMapFilename: '../_maps/[file].map'
+    sourceMapFilename: '../_maps/[file].map?[chunkhash]'
   },
   module: {
     rules: [
